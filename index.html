@@ -1,0 +1,2255 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Domingo: Guardian of the Seas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=IM+Fell+English+SC&display=swap">
+<style>
+/* Layout concept: a captain's command deck. Dusk-lit hero sea on top, then a two-column
+   working deck (targets left, campaign instruments right). Single committed look: night sea. */
+:root {
+  --bg: #091828;          /* deep ocean navy */
+  --bg-deep: #050d17;     /* near-black blue */
+  --panel: #0c1e31;
+  --panel-2: #102840;
+  --wood: #4a3322;
+  --wood-dark: #24170f;
+  --gold: #c9a24a;
+  --gold-hi: #e8c97a;
+  --gold-dim: #7d6429;
+  --crimson: #a3302f;
+  --crimson-hi: #e0746d;
+  --ivory: #ece6d3;
+  --foam: #9fcbc4;
+  --muted: #93a8b6;
+  --line: rgba(201, 162, 74, 0.28);
+  --line-soft: rgba(147, 168, 182, 0.18);
+  --ink-on-gold: #0a1420;
+  --ok: #7fc8a0;
+  --warn: #e3a94a;
+  --font-display: "IM Fell English SC", "Iowan Old Style", Georgia, serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: var(--bg-deep); scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ivory);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; letter-spacing: 0.04em; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: var(--gold-hi); }
+:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 2px; border-radius: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip { position: absolute; left: 16px; top: -60px; background: var(--gold); color: var(--ink-on-gold); padding: 8px 14px; z-index: 200; font-weight: 600; }
+.skip:focus { top: 8px; }
+.wrap { max-width: 1200px; margin-inline: auto; padding-inline: 16px; }
+.label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 40px; padding: 8px 16px; border-radius: 3px;
+  border: 1px solid var(--line); background: rgba(255,255,255,0.03);
+  color: var(--ivory); font-weight: 600; font-size: 14px; letter-spacing: 0.02em;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+.btn:hover { background: rgba(201,162,74,0.12); border-color: var(--gold); }
+.btn:active { transform: translateY(1px); }
+.btn[disabled], .btn[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
+.btn-gold { background: linear-gradient(180deg, var(--gold-hi), var(--gold)); color: var(--ink-on-gold); border-color: var(--gold-hi); text-transform: uppercase; letter-spacing: 0.1em; font-size: 13px; }
+.btn-gold:hover { background: linear-gradient(180deg, #f3d98f, var(--gold-hi)); }
+.btn-danger { border-color: rgba(224,116,109,0.5); color: var(--crimson-hi); }
+.btn-danger:hover { background: rgba(163,48,47,0.22); border-color: var(--crimson-hi); }
+.btn-solid-danger { background: var(--crimson); border-color: var(--crimson-hi); color: #fff; }
+.btn-solid-danger:hover { background: #b93a38; }
+.btn-sm { min-height: 34px; padding: 5px 12px; font-size: 13px; }
+.btn-icon { min-width: 40px; padding: 8px; }
+.btn svg, .icon { width: 18px; height: 18px; flex: none; }
+
+/* ---------- Top bar ---------- */
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.012) 0 3px, transparent 3px 11px),
+    linear-gradient(180deg, #170f09, var(--wood-dark));
+  border-bottom: 1px solid var(--gold-dim);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+}
+.topbar-inner { max-width: 1200px; margin-inline: auto; padding: 8px 16px; display: flex; align-items: center; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ivory); min-width: 0; }
+.brand-mark { width: 36px; height: 36px; color: var(--gold-hi); flex: none; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.05; min-width: 0; }
+.brand-name { font-family: var(--font-display); font-size: 22px; letter-spacing: 0.14em; color: var(--gold-hi); }
+.brand-sub { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.2em; color: var(--ivory); opacity: 0.8; white-space: nowrap; }
+.mainnav { display: flex; gap: 4px; margin-left: 8px; }
+.navlink {
+  background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 12px; color: var(--ivory);
+  font-weight: 600; font-size: 14px; opacity: 0.8; display: inline-flex; gap: 8px; align-items: center;
+}
+.navlink:hover { opacity: 1; }
+.navlink[aria-current="page"] { border-bottom-color: var(--gold); opacity: 1; color: var(--gold-hi); }
+.count { background: rgba(201,162,74,0.2); border: 1px solid var(--line); border-radius: 10px; padding: 0 7px; font-size: 12px; min-width: 22px; text-align: center; font-variant-numeric: tabular-nums; }
+.topbar-status { display: flex; align-items: center; gap: 14px; margin-left: auto; min-width: 0; }
+.commander { display: flex; flex-direction: column; line-height: 1.15; }
+.commander strong { font-family: var(--font-display); font-size: 16px; letter-spacing: 0.1em; font-weight: 400; }
+.alliance-chip {
+  display: inline-flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.3); border: 1px solid var(--line);
+  border-radius: 3px; padding: 5px 10px; font-size: 13px; color: var(--ivory);
+}
+.alliance-chip:hover { border-color: var(--gold); }
+.alliance-chip .crest { width: 18px; height: 18px; color: var(--gold-hi); }
+.daily-mini { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+.meter { height: 8px; background: rgba(0,0,0,0.45); border: 1px solid var(--line-soft); border-radius: 2px; overflow: hidden; }
+.meter > i { display: block; height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold-hi)); width: 0; transition: width 0.5s ease; }
+.daily-mini .meter { width: 90px; }
+.topbar-tools { display: flex; gap: 6px; }
+.topbar-tools .btn { background: rgba(0,0,0,0.3); }
+
+/* ---------- Views ---------- */
+main { display: block; outline: none; }
+.view { padding-block: 20px 56px; }
+.view[hidden] { display: none; }
+.view-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.view-head h2 { font-size: 30px; color: var(--gold-hi); letter-spacing: 0.1em; }
+.view-head p { color: var(--muted); max-width: 60ch; }
+
+/* ---------- Panels ---------- */
+.panel {
+  position: relative; background: linear-gradient(180deg, var(--panel), var(--bg-deep));
+  border: 1px solid var(--line-soft); border-radius: 4px; padding: 16px;
+}
+.panel::before, .panel::after {
+  content: ""; position: absolute; width: 12px; height: 12px; pointer-events: none; border: 1px solid var(--gold-dim);
+}
+.panel::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+.panel::after { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+.panel-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.panel-title h3 { font-size: 20px; color: var(--gold-hi); letter-spacing: 0.1em; }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+.deck-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; margin-top: 20px; }
+.deck-grid > * { min-width: 0; }
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative; min-height: 440px; border: 1px solid var(--gold-dim); border-radius: 4px; overflow: hidden;
+  background: var(--bg-deep); isolation: isolate;
+}
+.hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: -1; }
+.hero::after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 0 4px rgba(0,0,0,0.25), inset 0 0 80px rgba(0,0,0,0.5); }
+.hero-copy {
+  position: relative; max-width: 520px; padding: 28px 28px 24px; display: flex; flex-direction: column; gap: 12px;
+  background: linear-gradient(90deg, rgba(5,13,23,0.82) 0%, rgba(5,13,23,0.55) 70%, rgba(5,13,23,0) 100%); min-height: 440px; justify-content: center;
+}
+.hero-kicker { font-family: var(--font-display); letter-spacing: 0.22em; color: var(--foam); font-size: 13px; }
+.hero h1 { font-size: clamp(34px, 5.4vw, 58px); line-height: 1; color: var(--gold-hi); letter-spacing: 0.08em; text-shadow: 0 2px 18px rgba(0,0,0,0.7); }
+.hero-ship { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ship-tag { font-family: var(--font-display); font-size: 20px; letter-spacing: 0.16em; color: var(--ivory); border: 1px solid var(--crimson-hi); padding: 2px 10px; background: rgba(163,48,47,0.28); }
+.hero-status { color: var(--ivory); max-width: 44ch; text-shadow: 0 1px 8px rgba(0,0,0,0.8); min-height: 3em; }
+.hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 4px; }
+.hero-count { display: flex; align-items: baseline; gap: 8px; }
+.hero-count b { font-family: var(--font-display); font-size: 40px; color: var(--gold-hi); line-height: 1; font-weight: 400; font-variant-numeric: tabular-nums; }
+.hero-count span { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--foam); max-width: 11ch; line-height: 1.2; }
+.btn-prey { min-height: 48px; padding-inline: 22px; font-size: 14px; }
+
+/* ---------- Targets ---------- */
+.toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field > label, .field > .legend { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.input, .select, .textarea {
+  background: rgba(0,0,0,0.35); border: 1px solid var(--line-soft); border-radius: 3px; padding: 9px 12px; min-height: 40px; width: 100%; color: var(--ivory);
+}
+.input::placeholder, .textarea::placeholder { color: #6f8493; }
+.input:hover, .select:hover, .textarea:hover { border-color: var(--line); }
+.input:focus, .select:focus, .textarea:focus { border-color: var(--gold); outline: 2px solid rgba(232,201,122,0.35); outline-offset: 0; }
+.textarea { resize: vertical; min-height: 84px; }
+.input[aria-invalid="true"] { border-color: var(--crimson-hi); }
+.field-error { color: var(--crimson-hi); font-size: 13px; min-height: 0; }
+.field-hint { color: var(--muted); font-size: 12px; }
+.toolbar .search { flex: 1 1 200px; }
+.toolbar .select { width: auto; min-width: 150px; }
+.select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--gold) 50%), linear-gradient(135deg, var(--gold) 50%, transparent 50%); background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 32px; }
+.select option { background: #0c1e31; color: var(--ivory); }
+
+.targets { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.target {
+  position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 14px; align-items: start;
+  background: linear-gradient(180deg, rgba(16,40,64,0.72), rgba(7,17,29,0.9)); border: 1px solid var(--line-soft); border-left: 3px solid var(--muted);
+  border-radius: 3px; padding: 14px;
+}
+.target.p-important { border-left-color: var(--gold-dim); border-color: rgba(201,162,74,0.3); }
+.target.p-critical { border-left: 4px solid var(--gold-hi); border-color: var(--gold); background: linear-gradient(180deg, rgba(60,40,18,0.5), rgba(7,17,29,0.92)); box-shadow: 0 0 0 1px rgba(232,201,122,0.12), 0 6px 22px rgba(163,48,47,0.12); }
+.target.is-new { animation: spawn 0.9s cubic-bezier(.2,.8,.2,1); }
+.target.is-locked { outline: 2px solid var(--crimson-hi); outline-offset: 2px; animation: lockpulse 0.7s ease-in-out infinite alternate; }
+@keyframes spawn { 0% { transform: translateX(-24px); opacity: 0; box-shadow: 0 0 0 0 rgba(232,201,122,0.7); } 60% { opacity: 1; } 100% { transform: none; box-shadow: 0 0 0 14px rgba(232,201,122,0); } }
+@keyframes lockpulse { from { box-shadow: 0 0 0 0 rgba(224,116,109,0.0); } to { box-shadow: 0 0 22px 2px rgba(224,116,109,0.45); } }
+.target-icon { width: 44px; height: 44px; color: var(--foam); opacity: 0.9; }
+.p-critical .target-icon { color: var(--gold-hi); }
+.target-body { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.target-title { font-weight: 600; font-size: 16px; overflow-wrap: anywhere; line-height: 1.3; }
+.target-desc { color: #c9d3d6; font-size: 14px; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.target-ship { font-family: var(--font-display); letter-spacing: 0.1em; color: var(--muted); font-size: 12px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; font-size: 12.5px; color: var(--muted); }
+.badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; padding: 2px 8px; border-radius: 2px; border: 1px solid var(--line-soft); }
+.badge-routine { color: var(--foam); border-color: rgba(159,203,196,0.4); }
+.badge-important { color: var(--gold-hi); border-color: var(--gold-dim); background: rgba(201,162,74,0.1); }
+.badge-critical { color: #fff; background: var(--crimson); border-color: var(--crimson-hi); }
+.chip { font-size: 12px; padding: 1px 8px; border-radius: 10px; background: rgba(159,203,196,0.1); color: var(--foam); }
+.chip-sample { background: rgba(227,169,74,0.15); color: var(--warn); }
+.due-late { color: var(--crimson-hi); font-weight: 600; }
+.due-soon { color: var(--warn); font-weight: 600; }
+.target-actions { display: flex; flex-direction: column; gap: 6px; align-items: stretch; min-width: 108px; }
+.target-actions .row { display: flex; gap: 6px; }
+.target-actions .row .btn { flex: 1; }
+.confirm-inline { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--ivory); background: rgba(163,48,47,0.18); border: 1px solid rgba(224,116,109,0.5); padding: 8px; border-radius: 3px; }
+.confirm-inline .row { display: flex; gap: 6px; }
+
+.empty { text-align: center; padding: 36px 16px; color: var(--muted); display: flex; flex-direction: column; gap: 10px; align-items: center; border: 1px dashed var(--line); border-radius: 4px; }
+.empty svg { width: 64px; height: 64px; color: var(--gold-dim); }
+.empty h4 { font-size: 20px; color: var(--ivory); }
+.banner { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; background: rgba(227,169,74,0.1); border: 1px solid rgba(227,169,74,0.4); color: var(--ivory); padding: 10px 12px; border-radius: 3px; margin-bottom: 12px; font-size: 14px; }
+.banner.error { background: rgba(163,48,47,0.2); border-color: var(--crimson-hi); }
+
+/* ---------- Campaign side ---------- */
+.stat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-block: 12px; }
+.stat { background: rgba(0,0,0,0.3); border: 1px solid var(--line-soft); padding: 10px 8px; text-align: center; border-radius: 3px; }
+.stat b { display: block; font-family: var(--font-display); font-weight: 400; font-size: 28px; color: var(--gold-hi); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.progress-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+.recent { list-style: none; padding: 0; margin: 10px 0 0; display: flex; flex-direction: column; gap: 8px; }
+.recent li { display: flex; gap: 10px; align-items: baseline; justify-content: space-between; font-size: 14px; border-bottom: 1px dotted var(--line-soft); padding-bottom: 6px; min-width: 0; }
+.recent li span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.recent time { color: var(--muted); font-size: 12px; flex: none; }
+.link-btn { background: none; border: 0; padding: 0; color: var(--gold-hi); text-decoration: underline; text-underline-offset: 3px; font-weight: 600; }
+.challenge { display: flex; flex-direction: column; gap: 6px; padding: 10px 0; border-bottom: 1px dotted var(--line-soft); }
+.challenge:last-child { border-bottom: 0; }
+.challenge h4 { font-family: var(--font-body); font-size: 14px; font-weight: 700; letter-spacing: 0; display: flex; justify-content: space-between; gap: 8px; }
+.challenge p { font-size: 13px; color: var(--muted); }
+.challenge.done h4 { color: var(--ok); }
+
+/* ---------- Modal ---------- */
+.scrim { position: fixed; inset: 0; z-index: 90; background: rgba(2,6,12,0.78); display: flex; align-items: flex-start; justify-content: center; padding: 24px 16px; overflow-y: auto; animation: fade 0.15s ease-out; }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.dialog { width: 100%; max-width: 560px; margin-block: auto; background: linear-gradient(180deg, #112a44, #08121e); border: 1px solid var(--gold); border-radius: 4px; padding: 22px; box-shadow: 0 24px 80px rgba(0,0,0,0.7); position: relative; }
+.dialog h3 { font-size: 26px; color: var(--gold-hi); margin-bottom: 4px; letter-spacing: 0.1em; }
+.dialog .sub { color: var(--muted); margin-bottom: 16px; font-size: 14px; }
+.form { display: flex; flex-direction: column; gap: 14px; }
+.form-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; border: 0; padding: 0; margin: 0; }
+.seg legend { padding: 0; margin-bottom: 6px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 600; float: left; width: 100%; }
+.seg label { position: relative; display: flex; align-items: center; justify-content: center; text-align: center; min-height: 44px; border: 1px solid var(--line-soft); border-radius: 3px; background: rgba(0,0,0,0.3); font-weight: 600; font-size: 14px; cursor: pointer; padding: 6px; }
+.seg input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.seg label:has(input:checked) { border-color: var(--gold-hi); background: rgba(201,162,74,0.18); color: var(--gold-hi); }
+.seg label:has(input:focus-visible) { outline: 2px solid var(--gold-hi); outline-offset: 2px; }
+.seg label.crit:has(input:checked) { border-color: var(--crimson-hi); background: rgba(163,48,47,0.4); color: #fff; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+.switch-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px dotted var(--line-soft); }
+.switch-row:last-of-type { border-bottom: 0; }
+.switch-row .t { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.switch-row .t small { color: var(--muted); font-size: 12.5px; }
+.toggle { appearance: none; width: 46px; height: 26px; border-radius: 13px; background: #20384e; border: 1px solid var(--line); position: relative; cursor: pointer; flex: none; transition: background 0.15s; }
+.toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--ivory); transition: transform 0.15s; }
+.toggle:checked { background: var(--gold-dim); border-color: var(--gold-hi); }
+.toggle:checked::after { transform: translateX(20px); background: var(--gold-hi); }
+.settings-h { font-size: 15px; letter-spacing: 0.16em; color: var(--foam); margin: 16px 0 2px; }
+.range { width: 140px; accent-color: var(--gold); }
+.num-input { width: 84px; }
+
+/* ---------- Toasts ---------- */
+.toasts { position: fixed; z-index: 120; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 84px); display: flex; flex-direction: column; align-items: center; gap: 8px; padding-inline: 16px; pointer-events: none; }
+.toast { pointer-events: auto; max-width: 440px; background: #0f2338; border: 1px solid var(--gold); color: var(--ivory); padding: 10px 14px; border-radius: 3px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); font-size: 14px; animation: toastin 0.25s ease-out; }
+.toast.error { border-color: var(--crimson-hi); }
+.toast.royal { border-color: var(--gold-hi); background: linear-gradient(180deg, #2a2110, #0f2338); }
+@keyframes toastin { from { transform: translateY(12px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* ---------- Battle overlay ---------- */
+.battle { position: fixed; inset: 0; z-index: 100; background: #02060c; display: flex; flex-direction: column; animation: fade 0.18s ease-out; }
+.battle canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.battle-caption { z-index: 2; position: absolute; top: calc(env(safe-area-inset-top, 0px) + 20px); left: 0; right: 0; text-align: center; padding-inline: 16px; pointer-events: none; display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.battle-stage { font-family: var(--font-display); letter-spacing: 0.24em; color: var(--gold-hi); font-size: clamp(16px, 3.4vw, 26px); text-shadow: 0 2px 14px #000; text-transform: uppercase; }
+.battle-task { color: var(--ivory); opacity: 0.85; font-size: 14px; max-width: 60ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-shadow: 0 1px 8px #000; }
+.battle-skip { z-index: 3; position: absolute; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); }
+.victory { z-index: 4; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 16px; background: radial-gradient(ellipse at center, rgba(2,6,12,0.55), rgba(2,6,12,0.82)); animation: fade 0.35s ease-out; }
+.victory-card { max-width: 640px; width: 100%; text-align: center; border: 1px solid var(--gold-hi); background: linear-gradient(180deg, rgba(36,26,10,0.92), rgba(5,13,23,0.94)); padding: 28px 20px 22px; border-radius: 4px; box-shadow: 0 0 0 4px rgba(0,0,0,0.5), 0 0 60px rgba(201,162,74,0.35); animation: victoryin 0.55s cubic-bezier(.2,1.1,.3,1); display: flex; flex-direction: column; gap: 14px; align-items: center; }
+.victory-card h2 { font-size: clamp(24px, 6vw, 42px); line-height: 1.12; color: var(--gold-hi); letter-spacing: 0.06em; text-shadow: 0 0 24px rgba(232,201,122,0.45); text-wrap: balance; }
+.victory-task { font-weight: 600; font-size: 17px; overflow-wrap: anywhere; }
+.victory-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; color: var(--foam); font-size: 13.5px; }
+.victory-meta b { color: var(--ivory); font-weight: 600; }
+@keyframes victoryin { from { transform: scale(0.85); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* ---------- Ledger ---------- */
+.ledger {
+  background:
+    repeating-linear-gradient(0deg, transparent 0 35px, rgba(201,162,74,0.1) 35px 36px),
+    linear-gradient(180deg, #21160e, #170f09);
+  border: 2px solid var(--wood); outline: 1px solid var(--gold-dim); outline-offset: -8px; border-radius: 4px; padding: 22px 22px 18px;
+}
+.ledger-head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
+.ledger-head h3 { font-size: 22px; color: var(--gold-hi); }
+.ledger-note { font-size: 13px; color: #cdbf9d; max-width: 60ch; }
+.day { margin-top: 18px; }
+.day h4 { font-size: 15px; color: var(--foam); letter-spacing: 0.16em; margin-bottom: 4px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+.entry { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 14px; padding: 12px 0; border-bottom: 1px dotted rgba(201,162,74,0.25); }
+.entry-main { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.entry-title { font-weight: 600; overflow-wrap: anywhere; }
+.entry-title::before { content: "\2693\00a0"; color: var(--gold); }
+.entry-desc { color: #d6ccb2; font-size: 14px; overflow-wrap: anywhere; }
+.entry-side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.rec-notice { background: rgba(0,0,0,0.35); border: 1px solid var(--line); padding: 10px 12px; font-size: 14px; border-radius: 3px; margin-bottom: 12px; }
+
+/* ---------- Alliance ---------- */
+.alliance-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+.alliance-grid > * { min-width: 0; }
+.queen-card { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 18px; align-items: center; }
+.insignia { width: 96px; height: 96px; color: var(--gold-hi); }
+.rank-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.rank { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px; border: 1px solid var(--line-soft); border-radius: 3px; background: rgba(0,0,0,0.25); }
+.rank.reached { border-color: var(--gold-dim); background: rgba(201,162,74,0.08); }
+.rank.current { border-color: var(--gold-hi); box-shadow: 0 0 0 1px rgba(232,201,122,0.25); }
+.rank .dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--muted); display: grid; place-items: center; font-size: 12px; }
+.rank.reached .dot { border-color: var(--gold-hi); background: var(--gold); color: var(--ink-on-gold); }
+.rank small { display: block; color: var(--muted); font-size: 12.5px; }
+.rank .req { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.note-real { border-left: 3px solid var(--foam); padding: 8px 12px; background: rgba(159,203,196,0.07); font-size: 13.5px; color: #c4d6d8; }
+.hist { display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); gap: 4px; align-items: end; height: 120px; margin-top: 10px; }
+.hist .col { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; gap: 4px; min-width: 0; }
+.hist .bar { width: 100%; background: linear-gradient(180deg, var(--gold-hi), var(--gold-dim)); min-height: 2px; border-radius: 1px; }
+.hist .bar.zero { background: var(--line-soft); }
+.hist .col span { font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.hist-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 4px; }
+.reward-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.reward { display: flex; gap: 10px; align-items: baseline; justify-content: space-between; font-size: 14px; }
+.reward.locked { color: var(--muted); }
+.reward b { font-weight: 600; }
+
+/* ---------- Mobile tab bar ---------- */
+.tabbar { display: none; }
+@media (max-width: 960px) {
+  .deck-grid { grid-template-columns: minmax(0, 1fr); }
+  .mainnav, .commander, .daily-mini { display: none; }
+  .alliance-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 720px) {
+  body { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 76px); }
+  .topbar-inner { gap: 8px; padding-block: 6px; }
+  .brand-name { font-size: 19px; }
+  .brand-sub { font-size: 9.5px; }
+  .alliance-chip .chip-text { display: none; }
+  .view { padding-block: 14px 40px; }
+  .hero { min-height: 600px; }
+  .hero-copy { max-width: none; min-height: 0; padding: 20px 16px 16px; justify-content: flex-start; background: linear-gradient(180deg, rgba(5,13,23,0.85) 0%, rgba(5,13,23,0.55) 70%, rgba(5,13,23,0) 100%); }
+  .hero-status { min-height: 0; }
+  .target { grid-template-columns: minmax(0, 1fr); }
+  .target-icon { display: none; }
+  .target-actions { flex-direction: row; flex-wrap: wrap; min-width: 0; }
+  .target-actions .attack { flex: 1 1 100%; min-height: 48px; }
+  .target-actions .row { flex: 1 1 100%; }
+  .confirm-inline { flex: 1 1 100%; }
+  .form-row { grid-template-columns: minmax(0, 1fr); }
+  .stat-grid { gap: 6px; }
+  .entry { grid-template-columns: minmax(0, 1fr); }
+  .entry-side { flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .queen-card { grid-template-columns: 72px minmax(0, 1fr); }
+  .insignia { width: 72px; height: 72px; }
+  .ledger { padding: 16px 14px; }
+  .toasts { bottom: calc(env(safe-area-inset-bottom, 0px) + 92px); }
+  .tabbar {
+    display: grid; grid-template-columns: repeat(4, 1fr); position: fixed; z-index: 60; left: 0; right: 0; bottom: 0;
+    padding: 6px 8px calc(env(safe-area-inset-bottom, 0px) + 6px); background: linear-gradient(180deg, #170f09, var(--wood-dark)); border-top: 1px solid var(--gold-dim); align-items: end;
+  }
+  .tab { background: none; border: 0; color: var(--ivory); opacity: 0.75; display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 52px; justify-content: center; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; }
+  .tab svg { width: 22px; height: 22px; }
+  .tab[aria-current="page"] { opacity: 1; color: var(--gold-hi); }
+  .tab.fab { opacity: 1; }
+  .tab.fab span.disc { width: 54px; height: 54px; border-radius: 50%; margin-top: -26px; background: linear-gradient(180deg, var(--gold-hi), var(--gold)); color: var(--ink-on-gold); display: grid; place-items: center; border: 3px solid var(--wood-dark); box-shadow: 0 4px 14px rgba(0,0,0,0.6); }
+  .tab.fab svg { width: 26px; height: 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .target.is-new, .target.is-locked, .toast, .victory-card, .victory, .scrim, .battle { animation: none !important; }
+  .meter > i { transition: none; }
+}
+body.reduce-motion .target.is-new, body.reduce-motion .target.is-locked, body.reduce-motion .toast, body.reduce-motion .victory-card, body.reduce-motion .victory, body.reduce-motion .scrim, body.reduce-motion .battle { animation: none !important; }
+body.reduce-motion .meter > i { transition: none; }
+
+.navlink { text-decoration: none; }
+.tab { text-decoration: none; }
+
+.navlink, .alliance-chip, .alliance-chip span { white-space: nowrap; }
+.hero-count span { max-width: none; white-space: nowrap; }
+.brand-text { overflow: hidden; }
+.brand-sub { overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 720px) {
+  .hero-actions { flex-wrap: nowrap; gap: 12px; }
+  .btn-prey { padding-inline: 14px; font-size: 13px; }
+  .hero-count b { font-size: 34px; }
+  .hero-count span { font-size: 11px; white-space: normal; max-width: 7ch; }
+  .brand { flex: 1 1 auto; }
+  .brand-sub { letter-spacing: 0.12em; }
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-wheel" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="24" cy="24" r="9"/><circle cx="24" cy="24" r="16"/><path d="M24 4v10M24 34v10M4 24h10M34 24h10M10 10l7 7M31 31l7 7M38 10l-7 7M17 31l-7 7"/></g><circle cx="24" cy="24" r="3" fill="currentColor"/></symbol>
+    <symbol id="i-crest" viewBox="0 0 48 48"><g fill="currentColor"><path d="M8 20l6 4 6-10 4 8 4-8 6 10 6-4-3 14H11z"/><circle cx="8" cy="19" r="2"/><circle cx="24" cy="12" r="2"/><circle cx="40" cy="19" r="2"/></g><path d="M8 38q4-4 8 0t8 0 8 0 8 0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 010 7M18.5 6a8.5 8.5 0 010 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-mute" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 9.5l5 5M21.5 9.5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><path d="M12 8.6a3.4 3.4 0 100 6.8 3.4 3.4 0 000-6.8z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10.4 2.8h3.2l.5 2.4 1.6.7 2.1-1.3 2.3 2.3-1.3 2.1.7 1.6 2.4.5v3.2l-2.4.5-.7 1.6 1.3 2.1-2.3 2.3-2.1-1.3-1.6.7-.5 2.4h-3.2l-.5-2.4-1.6-.7-2.1 1.3-2.3-2.3 1.3-2.1-.7-1.6-2.4-.5v-3.2l2.4-.5.7-1.6-1.3-2.1 2.3-2.3 2.1 1.3 1.6-.7z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+    <symbol id="i-attack" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7.5"/><path d="M12 1.5v5M12 17.5v5M1.5 12h5M17.5 12h5"/></g><circle cx="12" cy="12" r="2.4" fill="currentColor"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2 2 0 012.8 0l.2.2a2 2 0 010 2.8L8 19z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13M10 11v6M14 11v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-deck" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></g></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3zM5 17a3 3 0 013-3h11M9 8h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-crown" viewBox="0 0 24 24"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3l10 18H2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 10v5M12 17.6v.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-ship-sloop" viewBox="0 0 48 48"><path d="M5 33h38l-6 8H11z" fill="currentColor"/><path d="M24 7v26" stroke="currentColor" stroke-width="2"/><path d="M26 9l12 20H26z" fill="currentColor" opacity=".8"/><path d="M22 13L11 29h11z" fill="currentColor" opacity=".55"/></symbol>
+    <symbol id="i-ship-barge" viewBox="0 0 48 48"><path d="M3 35h42l-4 6H7z" fill="currentColor"/><rect x="11" y="27" width="9" height="8" fill="currentColor" opacity=".7"/><rect x="22" y="23" width="11" height="12" fill="currentColor" opacity=".7"/><path d="M38 10v25" stroke="currentColor" stroke-width="2"/><path d="M36 12L28 26h8z" fill="currentColor" opacity=".8"/></symbol>
+    <symbol id="i-ship-galleon" viewBox="0 0 48 48"><path d="M4 31h8v-5h8v5h24l-7 10H10z" fill="currentColor"/><path d="M19 6v25M31 11v20" stroke="currentColor" stroke-width="2"/><path d="M21 8l11 8-11 12zM33 13l8 6-8 9z" fill="currentColor" opacity=".8"/><path d="M12 8L5 24h14z" fill="currentColor" opacity=".5" transform="translate(2 -1)"/></symbol>
+    <symbol id="i-ship-brig" viewBox="0 0 48 48"><path d="M4 33h40l-6 8H10z" fill="currentColor"/><path d="M16 9v24M31 7v26" stroke="currentColor" stroke-width="2"/><path d="M18 11l10 18H18zM33 9l9 20H33z" fill="currentColor" opacity=".8"/><path d="M14 13L5 29h9z" fill="currentColor" opacity=".5"/><circle cx="16" cy="36" r="1.3" fill="#0b1b2e"/><circle cx="22" cy="36" r="1.3" fill="#0b1b2e"/><circle cx="28" cy="36" r="1.3" fill="#0b1b2e"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip" href="#main">Skip to the main content</a>
+
+<header class="topbar" id="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#deck" aria-label="Domingo, Guardian of the Seas. Go to the Command Deck">
+      <svg class="brand-mark" aria-hidden="true"><use href="#i-wheel"/></svg>
+      <span class="brand-text"><span class="brand-name">DOMINGO</span><span class="brand-sub">GUARDIAN OF THE SEAS</span></span>
+    </a>
+    <nav class="mainnav" aria-label="Primary">
+      <a class="navlink" data-view="deck" href="#deck">Command Deck</a>
+      <a class="navlink" data-view="ledger" href="#ledger">Sanked Ships <span class="count num" id="navSunk">0</span></a>
+      <a class="navlink" data-view="alliance" href="#alliance">Queen's Alliance</a>
+    </nav>
+    <div class="topbar-status">
+      <div class="commander"><span class="label">Commander</span><strong>Domingo</strong></div>
+      <a class="alliance-chip" href="#alliance" id="allianceChip" style="text-decoration:none" aria-label="Queen's Alliance status"></a>
+      <div class="daily-mini" id="dailyMini"></div>
+    </div>
+    <div class="topbar-tools">
+      <button class="btn btn-icon" id="soundBtn" type="button" aria-pressed="true" aria-label="Sound on. Press to mute"><svg aria-hidden="true"><use href="#i-sound"/></svg></button>
+      <button class="btn btn-icon" id="settingsBtn" type="button" aria-label="Open settings"><svg aria-hidden="true"><use href="#i-gear"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <section class="view" id="view-deck" aria-label="Command Deck">
+    <div class="wrap">
+      <div id="storageBanner"></div>
+      <section class="hero" aria-labelledby="heroTitle">
+        <canvas id="heroCanvas" aria-hidden="true"></canvas>
+        <div class="hero-copy">
+          <p class="hero-kicker">COMMAND DECK &middot; ISLE OF AURELIA</p>
+          <h1 id="heroTitle">GUARDIAN OF THE SEAS</h1>
+          <div class="hero-ship"><span class="ship-tag">DOMINGO1357</span><span class="label">Personal flagship &middot; escorted by the Domingo Fleet</span></div>
+          <p class="hero-status" id="heroStatus"></p>
+          <div class="hero-actions">
+            <button class="btn btn-gold btn-prey" id="preyBtn" type="button"><svg aria-hidden="true"><use href="#i-plus"/></svg> Identify Prey</button>
+            <div class="hero-count"><b class="num" id="heroToday">0</b><span>ships sunk today</span></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="deck-grid">
+        <section class="panel" aria-labelledby="atTitle">
+          <div class="panel-title">
+            <h3 id="atTitle">Active Targets <span class="count num" id="atCount">0</span></h3>
+            <button class="btn btn-sm" id="addBtn2" type="button"><svg aria-hidden="true"><use href="#i-plus"/></svg> Add Target</button>
+          </div>
+          <div id="sampleBanner"></div>
+          <div class="toolbar" role="search">
+            <div class="field search"><label class="sr-only" for="tSearch">Search active targets</label><input class="input" id="tSearch" type="search" placeholder="Search targets, notes, categories" autocomplete="off"></div>
+            <div class="field"><label class="sr-only" for="tPriority">Filter by priority</label><select class="select" id="tPriority"><option value="all">All priorities</option><option value="critical">Critical</option><option value="important">Important</option><option value="routine">Routine</option></select></div>
+            <div class="field"><label class="sr-only" for="tSort">Sort targets</label><select class="select" id="tSort"><option value="priority">Priority first</option><option value="due">Nearest deadline</option><option value="newest">Newest sighted</option><option value="oldest">Oldest sighted</option></select></div>
+          </div>
+          <div id="targetsRoot"></div>
+        </section>
+        <aside class="stack" aria-label="Campaign instruments">
+          <section class="panel" id="dailyPanel" aria-labelledby="dailyTitle"></section>
+          <section class="panel" id="rivalPanel" aria-labelledby="rivalTitle"></section>
+          <section class="panel" id="queenMini" aria-labelledby="queenMiniTitle"></section>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-ledger" aria-label="Sanked Ships" hidden><div class="wrap" id="ledgerRoot"></div></section>
+  <section class="view" id="view-alliance" aria-label="Queen's Alliance" hidden><div class="wrap" id="allianceRoot"></div></section>
+</main>
+
+<nav class="tabbar" aria-label="Primary mobile">
+  <a class="tab" data-view="deck" href="#deck" style="text-decoration:none"><svg aria-hidden="true"><use href="#i-deck"/></svg><span>Deck</span></a>
+  <a class="tab" data-view="ledger" href="#ledger" style="text-decoration:none"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Sanked</span></a>
+  <button class="tab fab" id="fabBtn" type="button" aria-label="Identify prey. Add a new target"><span class="disc"><svg aria-hidden="true"><use href="#i-plus"/></svg></span></button>
+  <a class="tab" data-view="alliance" href="#alliance" style="text-decoration:none"><svg aria-hidden="true"><use href="#i-crown"/></svg><span>Alliance</span></a>
+</nav>
+
+<div id="modalRoot"></div>
+<div id="battleRoot"></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<div class="sr-only" id="announcer" aria-live="assertive"></div>
+
+<script>
+'use strict';
+/* =========================================================================
+   DOMINGO: GUARDIAN OF THE SEAS
+   Layer 1: game data, storage and rules. No DOM access in this file.
+   ========================================================================= */
+const DG = {};
+
+DG.STORAGE_KEY = 'domingo.guardian.v1';
+DG.VICTORY_TEXT = 'DOMINGO! THE SHIP HAS BEEN SANKED!';
+
+DG.PRIORITIES = {
+  routine:   { label: 'Routine',   weight: 1, favor: 10 },
+  important: { label: 'Important', weight: 2, favor: 20 },
+  critical:  { label: 'Critical',  weight: 3, favor: 40 }
+};
+
+DG.QUEEN = { name: 'Queen Marisol', realm: 'the Isle of Aurelia' };
+
+DG.RANKS = [
+  { id: 0, title: 'Sea Warden',        favor: 0,    blurb: 'Sworn to the harbour patrol of Aurelia.' },
+  { id: 1, title: 'Harbor Captain',    favor: 100,  blurb: 'Trusted with the queen’s anchorage.' },
+  { id: 2, title: 'Royal Commodore',   favor: 300,  blurb: 'Leads the queen’s escorts on the trade lanes.' },
+  { id: 3, title: 'Admiral of the Reach', favor: 700, blurb: 'Holds the strategic sea routes for the crown.' },
+  { id: 4, title: 'Guardian of the Seas', favor: 1500, blurb: 'The queen’s sword on every tide.' }
+];
+
+DG.COSMETICS = [
+  { rank: 1, key: 'pennant',  name: 'Royal Pennant',     desc: 'A gold pennant flies from the mainmast of DOMINGO1357.' },
+  { rank: 2, key: 'gilded',   name: 'Gilded Gunwales',   desc: 'Gold leaf lines the gun deck of DOMINGO1357.' },
+  { rank: 3, key: 'standard', name: 'Queen’s Standard', desc: 'The Domingo Fleet sails under the queen’s crest.' },
+  { rank: 4, key: 'lantern',  name: 'Guardian Lantern',  desc: 'A warm beacon lantern burns at the stern of DOMINGO1357.' }
+];
+
+DG.MILESTONES = [
+  { n: 5,   bonus: 30 },
+  { n: 10,  bonus: 60 },
+  { n: 25,  bonus: 120 },
+  { n: 50,  bonus: 250 },
+  { n: 100, bonus: 500 },
+  { n: 250, bonus: 1000 }
+];
+
+DG.CHALLENGES = [
+  { id: 'blockade', name: 'Break the Blockade', rival: 'Captain Vareth of the Black Reach',
+    desc: 'Sink 3 ships in one day.', period: 'day', target: 3, favor: 30 },
+  { id: 'duel', name: 'Duel Captain Maro Vell', rival: 'Captain Maro Vell',
+    desc: 'Sink 2 Critical targets this week.', period: 'week', target: 2, favor: 70, priority: 'critical' },
+  { id: 'sealane', name: 'Hold the Sea Lane', rival: 'Admiral Corso, the Salt King',
+    desc: 'Sink 10 ships this week.', period: 'week', target: 10, favor: 80 }
+];
+
+DG.ATTACKERS = {
+  scout:    { name: 'Scout Cutter' },
+  warship:  { name: 'Patrol Warship' },
+  flagship: { name: 'DOMINGO1357' }
+};
+
+const ENEMY_ADJ = ['Hollow', 'Black', 'Gilded', 'Salt', 'Grey', 'Iron', 'Drowned', 'Ashen', 'Pale', 'Rusted', 'Wicked', 'Silent'];
+const ENEMY_NOUN = ['Crow', 'Marlin', 'Widow', 'Reach', 'Tern', 'Lantern', 'Cormorant', 'Tide', 'Magpie', 'Anchor', 'Fortune', 'Harrow'];
+const ENEMY_TYPES = {
+  barge:   { type: 'Supply Barge' },
+  sloop:   { type: 'Raider Sloop' },
+  brig:    { type: 'Rival Brigantine' },
+  galleon: { type: 'Merchant Galleon' }
+};
+const ENEMY_BY_PRIORITY = { routine: ['barge', 'sloop'], important: ['sloop', 'brig'], critical: ['galleon', 'brig'] };
+
+/* ---------- small helpers ---------- */
+DG.pad = (n) => String(n).padStart(2, '0');
+DG.hash = (str) => { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
+DG.uid = () => {
+  try { if (globalThis.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) { /* fall through */ }
+  return 't_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+};
+DG.dayKey = (ts) => { const d = new Date(ts); return d.getFullYear() + '-' + DG.pad(d.getMonth() + 1) + '-' + DG.pad(d.getDate()); };
+DG.weekKey = (ts) => { const d = new Date(ts); const back = (d.getDay() + 6) % 7; return DG.dayKey(new Date(d.getFullYear(), d.getMonth(), d.getDate() - back, 12).getTime()); };
+DG.periodKey = (period, ts) => period === 'day' ? DG.dayKey(ts) : DG.weekKey(ts);
+
+DG.enemyFor = (task) => {
+  const h = DG.hash(task.id || task.title || 'x');
+  const pool = ENEMY_BY_PRIORITY[task.priority] || ENEMY_BY_PRIORITY.routine;
+  const icon = pool[h % pool.length];
+  return {
+    name: 'The ' + ENEMY_ADJ[(h >>> 3) % ENEMY_ADJ.length] + ' ' + ENEMY_NOUN[(h >>> 7) % ENEMY_NOUN.length],
+    type: ENEMY_TYPES[icon].type,
+    icon: icon
+  };
+};
+
+/* ---------- state shape ---------- */
+DG.defaultState = () => ({
+  v: 1,
+  tasks: [],
+  stats: { totalSunk: 0, favor: 0, bestStreak: 0, milestones: [], claimed: {}, dailyWon: {}, log: [], seeded: false },
+  settings: {
+    sound: true, ambience: false, volume: 0.7,
+    reducedMotion: 'system', fast: false, lowPower: 'auto',
+    dailyGoal: 5,
+    deploy: { important: true, critical: true, milestone: true }
+  }
+});
+
+DG.normalize = (raw) => {
+  const base = DG.defaultState();
+  if (!raw || typeof raw !== 'object') return base;
+  const out = base;
+  if (Array.isArray(raw.tasks)) {
+    const seen = new Set();
+    raw.tasks.forEach((t) => {
+      if (!t || typeof t !== 'object') return;
+      const title = typeof t.title === 'string' ? t.title.trim() : '';
+      if (!title || typeof t.id !== 'string' || seen.has(t.id)) return;
+      seen.add(t.id);
+      out.tasks.push({
+        id: t.id,
+        title: title.slice(0, 120),
+        description: typeof t.description === 'string' ? t.description.slice(0, 500) : '',
+        category: typeof t.category === 'string' ? t.category.slice(0, 30) : '',
+        priority: DG.PRIORITIES[t.priority] ? t.priority : 'routine',
+        createdAt: Number.isFinite(t.createdAt) ? t.createdAt : Date.now(),
+        due: Number.isFinite(t.due) ? t.due : null,
+        status: t.status === 'sunk' ? 'sunk' : 'active',
+        completedAt: t.status === 'sunk' && Number.isFinite(t.completedAt) ? t.completedAt : null,
+        attacker: typeof t.attacker === 'string' ? t.attacker : '',
+        enemy: t.enemy && typeof t.enemy === 'object' ? { name: String(t.enemy.name || ''), type: String(t.enemy.type || ''), icon: String(t.enemy.icon || 'sloop') } : null,
+        sample: !!t.sample
+      });
+    });
+  }
+  const s = raw.stats && typeof raw.stats === 'object' ? raw.stats : {};
+  const sunkCount = out.tasks.filter((t) => t.status === 'sunk').length;
+  out.stats.totalSunk = Math.max(Number.isFinite(s.totalSunk) ? s.totalSunk : 0, sunkCount);
+  out.stats.favor = Number.isFinite(s.favor) && s.favor > 0 ? Math.floor(s.favor) : 0;
+  out.stats.bestStreak = Number.isFinite(s.bestStreak) ? s.bestStreak : 0;
+  out.stats.milestones = Array.isArray(s.milestones) ? s.milestones.filter(Number.isFinite) : [];
+  out.stats.claimed = s.claimed && typeof s.claimed === 'object' ? s.claimed : {};
+  out.stats.dailyWon = s.dailyWon && typeof s.dailyWon === 'object' ? s.dailyWon : {};
+  out.stats.log = Array.isArray(s.log) ? s.log.filter((e) => e && Number.isFinite(e.ts)).slice(-3000) : [];
+  out.stats.seeded = !!s.seeded;
+  const st = raw.settings && typeof raw.settings === 'object' ? raw.settings : {};
+  const d = out.settings;
+  if (typeof st.sound === 'boolean') d.sound = st.sound;
+  if (typeof st.ambience === 'boolean') d.ambience = st.ambience;
+  if (Number.isFinite(st.volume)) d.volume = Math.min(1, Math.max(0, st.volume));
+  if (['system', 'on', 'off'].includes(st.reducedMotion)) d.reducedMotion = st.reducedMotion;
+  if (typeof st.fast === 'boolean') d.fast = st.fast;
+  if (['auto', 'on', 'off'].includes(st.lowPower)) d.lowPower = st.lowPower;
+  if (Number.isFinite(st.dailyGoal)) d.dailyGoal = Math.min(50, Math.max(1, Math.round(st.dailyGoal)));
+  if (st.deploy && typeof st.deploy === 'object') {
+    ['important', 'critical', 'milestone'].forEach((k) => { if (typeof st.deploy[k] === 'boolean') d.deploy[k] = st.deploy[k]; });
+  }
+  return out;
+};
+
+/* ---------- storage ---------- */
+DG.Store = {
+  ok: true,
+  corrupt: false,
+  memory: null,
+  load() {
+    let raw = null;
+    try { raw = localStorage.getItem(DG.STORAGE_KEY); this.ok = true; }
+    catch (e) { this.ok = false; return this.memory ? DG.normalize(this.memory) : DG.defaultState(); }
+    if (!raw) return this.memory ? DG.normalize(this.memory) : DG.defaultState();
+    try { return DG.normalize(JSON.parse(raw)); }
+    catch (e) {
+      this.corrupt = true;
+      try { localStorage.setItem(DG.STORAGE_KEY + '.corrupt', raw); } catch (e2) { /* ignore */ }
+      return DG.defaultState();
+    }
+  },
+  save(state) {
+    this.memory = state;
+    try { localStorage.setItem(DG.STORAGE_KEY, JSON.stringify(state)); this.ok = true; return true; }
+    catch (e) { this.ok = false; return false; }
+  }
+};
+
+/* ---------- validation ---------- */
+DG.validateTask = (input) => {
+  const errors = {};
+  const title = String(input.title || '').trim();
+  const description = String(input.description || '').trim();
+  const category = String(input.category || '').trim();
+  const priority = DG.PRIORITIES[input.priority] ? input.priority : null;
+  if (!title) errors.title = 'Name your target before you identify it.';
+  else if (title.length > 120) errors.title = 'Keep the title under 120 characters.';
+  if (description.length > 500) errors.description = 'Keep the notes under 500 characters.';
+  if (category.length > 30) errors.category = 'Keep the category under 30 characters.';
+  if (!priority) errors.priority = 'Choose a priority.';
+  let due = null;
+  if (input.due) {
+    const t = new Date(input.due).getTime();
+    const yr = new Date(t).getFullYear();
+    if (!Number.isFinite(t) || yr < 2000 || yr > 2100) errors.due = 'That deadline is not a valid date and time.';
+    else due = t;
+  }
+  return { ok: Object.keys(errors).length === 0, errors, clean: { title, description, category, priority, due } };
+};
+
+/* ---------- queries ---------- */
+DG.Rules = {
+  active: (st) => st.tasks.filter((t) => t.status === 'active'),
+  sunk: (st) => st.tasks.filter((t) => t.status === 'sunk').sort((a, b) => b.completedAt - a.completedAt),
+  todayCount(st, now) { const k = DG.dayKey(now); return st.stats.log.filter((e) => DG.dayKey(e.ts) === k).length; },
+  streak(st, now) {
+    const days = new Set(st.stats.log.map((e) => DG.dayKey(e.ts)));
+    const step = (key, delta) => { const [y, m, d] = key.split('-').map(Number); return DG.dayKey(new Date(y, m - 1, d + delta, 12).getTime()); };
+    let cur = 0;
+    let k = DG.dayKey(now);
+    if (!days.has(k)) k = step(k, -1);
+    while (days.has(k)) { cur++; k = step(k, -1); }
+    let best = 0, run = 0, prev = null;
+    Array.from(days).sort().forEach((key) => { run = prev && step(prev, 1) === key ? run + 1 : 1; best = Math.max(best, run); prev = key; });
+    return { current: cur, best: Math.max(best, st.stats.bestStreak || 0) };
+  },
+  rankFor(favor) { let r = DG.RANKS[0]; DG.RANKS.forEach((x) => { if (favor >= x.favor) r = x; }); return r; },
+  nextRank(favor) { return DG.RANKS.find((x) => x.favor > favor) || null; },
+  cosmetics(favor) { const r = this.rankFor(favor).id; const o = {}; DG.COSMETICS.forEach((c) => { o[c.key] = r >= c.rank; }); return o; },
+  challengeProgress(st, ch, now) {
+    const key = DG.periodKey(ch.period, now);
+    const n = st.stats.log.filter((e) => DG.periodKey(ch.period, e.ts) === key && (!ch.priority || e.p === ch.priority)).length;
+    const claimed = !!st.stats.claimed[ch.id + ':' + key];
+    return { count: Math.min(n, ch.target), raw: n, target: ch.target, done: n >= ch.target, claimed, key };
+  },
+  history(st, days, now) {
+    const out = [];
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date(now); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() - i);
+      const key = DG.dayKey(d.getTime());
+      out.push({ key, ts: d.getTime(), count: st.stats.log.filter((e) => DG.dayKey(e.ts) === key).length });
+    }
+    return out;
+  },
+  /* Deployment rules: which vessels fight, derived from priority, settings and milestones. */
+  planAttack(task, st) {
+    const dep = st.settings.deploy;
+    const next = st.stats.totalSunk + 1;
+    const ms = DG.MILESTONES.find((m) => m.n === next && !st.stats.milestones.includes(m.n)) || null;
+    const h = DG.hash(task.id);
+    let plan = { tier: 'standard', attacker: h % 2 ? 'scout' : 'warship', volleys: 2, flagship: false, fleet: null, milestone: null };
+    if (task.priority === 'important' && dep.important) plan = { tier: 'enhanced', attacker: 'warship', volleys: 3, flagship: false, fleet: null, milestone: null };
+    if (task.priority === 'critical') {
+      plan = dep.critical
+        ? { tier: 'flagship', attacker: 'flagship', volleys: 4, flagship: true, fleet: 'distant', milestone: null }
+        : { tier: 'enhanced', attacker: 'warship', volleys: 3, flagship: false, fleet: null, milestone: null };
+    }
+    if (ms && dep.milestone) plan = { tier: 'milestone', attacker: 'flagship', volleys: 5, flagship: true, fleet: 'full', milestone: ms };
+    else if (ms) plan.milestone = ms;
+    plan.enemy = DG.enemyFor(task);
+    return plan;
+  },
+  /* The single place where a task becomes sunk. Idempotent: a second call for the same id does nothing. */
+  commitSink(st, id, plan, now) {
+    const task = st.tasks.find((t) => t.id === id);
+    if (!task || task.status !== 'active') return { ok: false, reason: 'not-active' };
+    const rankBefore = this.rankFor(st.stats.favor);
+    task.status = 'sunk';
+    task.completedAt = now;
+    task.attacker = DG.ATTACKERS[plan.attacker] ? DG.ATTACKERS[plan.attacker].name : 'Patrol Warship';
+    task.enemy = plan.enemy;
+    st.stats.totalSunk += 1;
+    st.stats.log.push({ ts: now, p: task.priority });
+    if (st.stats.log.length > 3000) st.stats.log = st.stats.log.slice(-3000);
+
+    const gains = [];
+    const base = DG.PRIORITIES[task.priority].favor;
+    gains.push({ label: DG.PRIORITIES[task.priority].label + ' target', favor: base });
+    const stk = this.streak(st, now);
+    if (stk.best > st.stats.bestStreak) st.stats.bestStreak = stk.best;
+    if (stk.current >= 3) gains.push({ label: stk.current + '-day streak', favor: 5 });
+    const ms = DG.MILESTONES.find((m) => m.n === st.stats.totalSunk && !st.stats.milestones.includes(m.n));
+    if (ms) { st.stats.milestones.push(ms.n); gains.push({ label: ms.n + ' ships sunk', favor: ms.bonus }); }
+    const today = this.todayCount(st, now);
+    const dk = DG.dayKey(now);
+    if (today >= st.settings.dailyGoal && !st.stats.dailyWon[dk]) { st.stats.dailyWon[dk] = true; gains.push({ label: 'Daily campaign won', favor: 25 }); }
+    const done = [];
+    DG.CHALLENGES.forEach((ch) => {
+      const p = this.challengeProgress(st, ch, now);
+      if (p.done && !p.claimed) { st.stats.claimed[ch.id + ':' + p.key] = true; gains.push({ label: ch.name, favor: ch.favor }); done.push(ch); }
+    });
+    const total = gains.reduce((a, g) => a + g.favor, 0);
+    st.stats.favor += total;
+    const rankAfter = this.rankFor(st.stats.favor);
+    return { ok: true, task, gains, favorGained: total, milestone: ms || null, challenges: done, today, rankUp: rankAfter.id > rankBefore.id ? rankAfter : null };
+  }
+};
+
+/* ---------- first-run sample targets (removable) ---------- */
+DG.seedSamples = (st, now) => {
+  if (st.stats.seeded || st.tasks.length) { st.stats.seeded = true; return false; }
+  const H = 3600000;
+  const mk = (title, description, priority, category, dueOffset, createdOffset) => ({
+    id: DG.uid(), title, description, category, priority, createdAt: now - createdOffset, due: dueOffset == null ? null : now + dueOffset,
+    status: 'active', completedAt: null, attacker: '', enemy: null, sample: true
+  });
+  st.tasks.push(
+    mk('Send the harbour master the berth request', 'Confirm dates and the crew list before noon.', 'routine', 'Admin', 6 * H, 3 * H),
+    mk('Finish the supply-route proposal', 'Draft, check the numbers, and send it for review.', 'important', 'Work', 30 * H, 20 * H),
+    mk('File the quarterly taxes', 'Gather the receipts and submit before the deadline.', 'critical', 'Finance', 52 * H, 40 * H)
+  );
+  st.stats.seeded = true;
+  return true;
+};
+
+if (typeof module !== 'undefined' && module.exports) module.exports = DG;
+
+
+/* =========================================================================
+   Layer 2: sound. Everything is synthesised with the Web Audio API, so the
+   app needs no downloads. Audio only starts after the first user gesture.
+   ========================================================================= */
+const Sfx = {
+  ctx: null, master: null, comp: null, noiseBuf: null, amb: null,
+  enabled: true, volume: 0.7, ambience: false,
+
+  unlock() {
+    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume().catch(() => {}); return; }
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      this.ctx = new AC();
+      this.comp = this.ctx.createDynamicsCompressor();
+      this.master = this.ctx.createGain();
+      this.master.connect(this.comp); this.comp.connect(this.ctx.destination);
+      const len = this.ctx.sampleRate * 2;
+      this.noiseBuf = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
+      const d = this.noiseBuf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      this.apply();
+    } catch (e) { this.ctx = null; }
+  },
+  apply() {
+    if (!this.ctx) return;
+    this.master.gain.value = this.enabled ? this.volume * 0.9 : 0;
+    if (this.enabled && this.ambience) this.startAmbience(); else this.stopAmbience();
+  },
+  set(opts) { Object.assign(this, opts); this.apply(); },
+  ok() { return !!(this.ctx && this.enabled && this.ctx.state === 'running'); },
+
+  _env(g, t, a, d, peak) {
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(peak, t + a);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + a + d);
+  },
+  _noise(t, dur, type, freq, q, peak, a, glideTo) {
+    const c = this.ctx;
+    const src = c.createBufferSource(); src.buffer = this.noiseBuf; src.loop = true;
+    const f = c.createBiquadFilter(); f.type = type; f.frequency.setValueAtTime(freq, t); if (glideTo) f.frequency.exponentialRampToValueAtTime(glideTo, t + dur); f.Q.value = q || 0.7;
+    const g = c.createGain(); this._env(g, t, a || 0.005, dur, peak);
+    src.connect(f); f.connect(g); g.connect(this.master);
+    src.start(t, Math.random()); src.stop(t + dur + (a || 0.005) + 0.05);
+  },
+  _tone(t, type, f0, f1, dur, peak, a, lp) {
+    const c = this.ctx;
+    const o = c.createOscillator(); o.type = type; o.frequency.setValueAtTime(f0, t);
+    if (f1 && f1 !== f0) o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    const g = c.createGain(); this._env(g, t, a || 0.005, dur, peak);
+    let tail = o;
+    if (lp) { const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = lp; o.connect(f); tail = f; }
+    tail.connect(g); g.connect(this.master);
+    o.start(t); o.stop(t + dur + (a || 0.005) + 0.05);
+  },
+
+  cannon() {
+    if (!this.ok()) return; const t = this.ctx.currentTime;
+    this._noise(t, 0.45, 'lowpass', 1600, 0.8, 0.5, 0.004, 180);
+    this._tone(t, 'sine', 120 + Math.random() * 20, 38, 0.35, 0.55, 0.004);
+  },
+  impact() {
+    if (!this.ok()) return; const t = this.ctx.currentTime;
+    this._noise(t, 0.5, 'lowpass', 700, 0.9, 0.5, 0.003, 120);
+    this._tone(t, 'sine', 70, 32, 0.4, 0.5, 0.003);
+    this._noise(t + 0.02, 0.18, 'highpass', 2500, 0.7, 0.12, 0.002);
+  },
+  splash(big) {
+    if (!this.ok()) return; const t = this.ctx.currentTime;
+    this._noise(t, big ? 1.0 : 0.5, 'bandpass', 2600, 0.6, big ? 0.35 : 0.2, 0.03, 700);
+    if (big) this._tone(t, 'sine', 90, 40, 0.6, 0.35, 0.01);
+  },
+  creak() {
+    if (!this.ok()) return; const t = this.ctx.currentTime; const c = this.ctx;
+    const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.setValueAtTime(64, t); o.frequency.linearRampToValueAtTime(48, t + 1.1);
+    const lfo = c.createOscillator(); lfo.frequency.value = 7; const lg = c.createGain(); lg.gain.value = 5; lfo.connect(lg); lg.connect(o.frequency);
+    const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(420, t); f.frequency.linearRampToValueAtTime(260, t + 1.1); f.Q.value = 9;
+    const g = c.createGain(); this._env(g, t, 0.2, 0.9, 0.16);
+    o.connect(f); f.connect(g); g.connect(this.master); o.start(t); lfo.start(t); o.stop(t + 1.4); lfo.stop(t + 1.4);
+  },
+  ping() {
+    if (!this.ok()) return; const t = this.ctx.currentTime;
+    this._tone(t, 'sine', 880, 880, 0.55, 0.16, 0.005);
+    this._tone(t + 0.02, 'sine', 1320, 1320, 0.4, 0.06, 0.005);
+  },
+  horn() {
+    if (!this.ok()) return; const t = this.ctx.currentTime;
+    this._tone(t, 'sawtooth', 98, 92, 1.5, 0.22, 0.25, 420);
+    this._tone(t, 'sawtooth', 147, 139, 1.5, 0.16, 0.3, 420);
+    this._tone(t, 'sine', 49, 46, 1.6, 0.3, 0.2);
+  },
+  victory() {
+    if (!this.ok()) return; const t = this.ctx.currentTime;
+    this._tone(t, 'sine', 62, 36, 0.9, 0.55, 0.004);
+    [73.4, 110, 146.8, 174.6].forEach((f, i) => this._tone(t + 0.06, 'sawtooth', f, f * 0.995, 1.9, 0.11 - i * 0.012, 0.12, 700));
+    this._tone(t + 0.08, 'triangle', 293.7, 293.7, 1.6, 0.06, 0.1);
+  },
+  royal() {
+    if (!this.ok()) return; const t = this.ctx.currentTime;
+    [440, 659.3, 880].forEach((f, i) => this._tone(t + i * 0.16, 'triangle', f, f, 1.1, 0.1, 0.01));
+  },
+  spawn() {
+    if (!this.ok()) return; const t = this.ctx.currentTime;
+    this._tone(t, 'sine', 520, 780, 0.22, 0.07, 0.01);
+  },
+  startAmbience() {
+    if (!this.ctx || this.amb) return; const c = this.ctx;
+    const src = c.createBufferSource(); src.buffer = this.noiseBuf; src.loop = true;
+    const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 380; f.Q.value = 0.5;
+    const g = c.createGain(); g.gain.value = 0.05;
+    const lfo = c.createOscillator(); lfo.frequency.value = 0.11; const lg = c.createGain(); lg.gain.value = 0.03; lfo.connect(lg); lg.connect(g.gain);
+    src.connect(f); f.connect(g); g.connect(this.master); src.start(); lfo.start();
+    this.amb = { src, lfo, g };
+  },
+  stopAmbience() {
+    if (!this.amb) return;
+    try { this.amb.src.stop(); this.amb.lfo.stop(); } catch (e) { /* already stopped */ }
+    this.amb = null;
+  }
+};
+
+
+/* =========================================================================
+   Layer 3: ship art. Every vessel is drawn procedurally on a canvas.
+   Local coordinates: origin at the waterline amidships, bow toward +x, y up is negative.
+   ========================================================================= */
+const Art = (() => {
+  const TAU = Math.PI * 2;
+  const wood = (a, b) => ({ a, b });
+  const DEFS = {
+    flagship: { L: 300, F: 26, R: 22, D: 34, rows: 1, nPorts: 7, hull: wood('#2e1d11', '#0d0704'), trim: '#c9a24a', flag: '#a3302f', ensign: 'star',
+      sail: { a: '#c23a36', b: '#7a1719', edge: '#d8b560' },
+      masts: [{ x: 105, sails: [[92, 58], [66, 42]] }, { x: 8, sails: [[120, 76], [88, 54], [56, 36]] }, { x: -92, sails: [[78, 50], [52, 34]] }] },
+    fleet: { L: 400, F: 34, R: 34, D: 44, rows: 2, nPorts: 9, hull: wood('#18222f', '#060b12'), trim: '#d8b560', flag: '#2c5f9e', ensign: 'wheel',
+      sail: { a: '#efe8d2', b: '#b7ae92', edge: '#2c5f9e' },
+      masts: [{ x: 140, sails: [[100, 62], [72, 44]] }, { x: 62, sails: [[130, 84], [96, 60], [64, 40]] }, { x: -28, sails: [[130, 84], [96, 60], [64, 40]] }, { x: -122, sails: [[96, 60], [66, 42]] }] },
+    scout: { L: 150, F: 14, R: 8, D: 18, rows: 0, nPorts: 0, hull: wood('#5b3d26', '#2a1b10'), trim: '#9a7a3a', flag: '#2f8f86', ensign: null,
+      sail: { a: '#e6dcc0', b: '#b3a684', edge: '#8a7a55' },
+      masts: [{ x: 6, sails: [[56, 46], [34, 28]] }] },
+    warship: { L: 220, F: 20, R: 14, D: 26, rows: 1, nPorts: 5, hull: wood('#4a3120', '#1d120a'), trim: '#c9a24a', flag: '#2f8f86', ensign: null,
+      sail: { a: '#dcd5bf', b: '#a29a80', edge: '#c9a24a' },
+      masts: [{ x: 48, sails: [[70, 46], [48, 32]] }, { x: -36, sails: [[84, 54], [56, 36]] }] },
+    barge: { L: 190, F: 12, R: 6, D: 16, rows: 0, nPorts: 0, hull: wood('#3b3a2c', '#1a1a12'), trim: '#6b5a30', flag: '#0c0f12', ensign: null, enemy: true, cargo: true,
+      sail: { a: '#b8ae8e', b: '#7b7258', edge: '#4a432f' }, masts: [{ x: 44, sails: [[62, 44]] }] },
+    sloop: { L: 170, F: 14, R: 8, D: 18, rows: 0, nPorts: 2, hull: wood('#34382d', '#14170f'), trim: '#6b5a30', flag: '#0c0f12', ensign: null, enemy: true,
+      sail: { a: '#b2ac94', b: '#74705c', edge: '#3f3d2d' }, masts: [{ x: 6, sails: [[66, 52], [40, 32]] }] },
+    brig: { L: 235, F: 18, R: 12, D: 22, rows: 1, nPorts: 4, hull: wood('#262c28', '#0e110f'), trim: '#7b5a2a', flag: '#0c0f12', ensign: null, enemy: true,
+      sail: { a: '#a9b0a2', b: '#656d62', edge: '#2d322d' }, masts: [{ x: 52, sails: [[78, 50], [54, 34]] }, { x: -40, sails: [[84, 54], [58, 36]] }] },
+    galleon: { L: 290, F: 26, R: 26, D: 32, rows: 1, nPorts: 6, hull: wood('#2b2a1f', '#100f0a'), trim: '#8a6a2e', flag: '#0c0f12', ensign: null, enemy: true,
+      sail: { a: '#bcb393', b: '#7d7557', edge: '#4a3d22' }, masts: [{ x: 100, sails: [[86, 54], [60, 38]] }, { x: 6, sails: [[112, 72], [82, 50], [52, 34]] }, { x: -88, sails: [[74, 48], [50, 32]] }] }
+  };
+  Object.keys(DEFS).forEach((k) => {
+    const d = DEFS[k];
+    d.masts.forEach((m) => { m.h = 8 + m.sails.reduce((a, s) => a + s[1] + 6, 0) + 10; });
+    d.top = d.F + Math.max.apply(null, d.masts.map((m) => m.h));
+  });
+
+  function hullPath(ctx, d) {
+    const L = d.L, F = d.F, R = d.R, D = d.D;
+    ctx.beginPath();
+    ctx.moveTo(-L / 2, -F - R);
+    ctx.lineTo(-L * 0.33, -F - R);
+    ctx.lineTo(-L * 0.33, -F);
+    ctx.lineTo(L * 0.36, -F);
+    ctx.lineTo(L * 0.5, -F * 1.12);
+    ctx.quadraticCurveTo(L * 0.53, D * 0.15, L * 0.38, D);
+    ctx.lineTo(-L * 0.4, D);
+    ctx.quadraticCurveTo(-L * 0.53, D * 0.3, -L / 2, -F - R);
+    ctx.closePath();
+  }
+  function star(ctx, r, pts) {
+    ctx.beginPath();
+    for (let i = 0; i < pts * 2; i++) { const a = -Math.PI / 2 + i * Math.PI / pts; const rr = i % 2 ? r * 0.42 : r; ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); }
+    ctx.closePath();
+  }
+  function crown(ctx, s) {
+    ctx.beginPath();
+    ctx.moveTo(-s, s * 0.6); ctx.lineTo(-s, -s * 0.2); ctx.lineTo(-s * 0.5, s * 0.15); ctx.lineTo(0, -s * 0.7);
+    ctx.lineTo(s * 0.5, s * 0.15); ctx.lineTo(s, -s * 0.2); ctx.lineTo(s, s * 0.6); ctx.closePath();
+  }
+  function sailPath(ctx, w, topY, h, b) {
+    const bot = topY + h;
+    ctx.beginPath();
+    ctx.moveTo(-w / 2, topY); ctx.lineTo(w / 2, topY);
+    ctx.bezierCurveTo(w / 2 + b, topY + h * 0.3, w / 2 + b * 1.1, topY + h * 0.7, w * 0.45, bot);
+    ctx.quadraticCurveTo(0, bot + h * 0.1, -w * 0.45, bot);
+    ctx.bezierCurveTo(-w / 2 + b * 0.4, topY + h * 0.7, -w / 2 + b * 0.4, topY + h * 0.3, -w / 2, topY);
+    ctx.closePath();
+  }
+
+  function draw(ctx, kind, o) {
+    o = o || {};
+    const d = DEFS[kind]; if (!d) return;
+    const t = o.t || 0, cos = o.cosm || {}, sway = o.sway || 0;
+    const L = d.L, F = d.F, R = d.R, D = d.D;
+    ctx.save();
+    // --- hull
+    hullPath(ctx, d);
+    const hg = ctx.createLinearGradient(0, -F - R, 0, D);
+    hg.addColorStop(0, d.hull.a); hg.addColorStop(1, d.hull.b);
+    ctx.fillStyle = hg; ctx.fill();
+    ctx.save(); hullPath(ctx, d); ctx.clip();
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1;
+    for (let y = -F + 5; y < D; y += 7) { ctx.beginPath(); ctx.moveTo(-L / 2, y); ctx.lineTo(L / 2, y + 2); ctx.stroke(); }
+    ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.fillRect(-L / 2, 0, L, D);          // below the waterline
+    // gun ports
+    const rows = d.rows, n = d.nPorts;
+    for (let r = 0; r < rows; r++) {
+      for (let i = 0; i < n; i++) {
+        const px = -L * 0.27 + (i / Math.max(1, n - 1)) * L * 0.58;
+        const py = -F * (rows === 2 ? 0.8 - r * 0.38 : 0.6);
+        ctx.fillStyle = '#04070a'; ctx.fillRect(px - 4, py - 3, 8, 6);
+        if (cos.gilded && kind === 'flagship') { ctx.strokeStyle = 'rgba(232,201,122,0.9)'; ctx.lineWidth = 1; ctx.strokeRect(px - 4.5, py - 3.5, 9, 7); }
+      }
+    }
+    if (o.flood > 0) {
+      const lvl = D - (D + F + R) * o.flood;
+      ctx.fillStyle = 'rgba(6,28,40,0.88)'; ctx.fillRect(-L, lvl, L * 2, D + 40);
+    }
+    ctx.restore();
+    // trim lines
+    ctx.strokeStyle = d.trim; ctx.lineWidth = 2.4;
+    ctx.beginPath(); ctx.moveTo(-L * 0.33, -F); ctx.lineTo(L * 0.36, -F); ctx.lineTo(L * 0.5, -F * 1.12); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-L / 2, -F - R); ctx.lineTo(-L * 0.33, -F - R); ctx.stroke();
+    ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(-L * 0.46, -F * 0.12); ctx.lineTo(L * 0.44, -F * 0.12); ctx.stroke();
+    if (cos.gilded && kind === 'flagship') { ctx.shadowColor = '#e8c97a'; ctx.shadowBlur = 8; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(-L * 0.33, -F); ctx.lineTo(L * 0.36, -F); ctx.stroke(); ctx.shadowBlur = 0; }
+    // stern windows & name plate
+    if (d.R >= 20) {
+      ctx.fillStyle = kind === 'flagship' ? '#f0c968' : '#9fc4e8';
+      for (let i = 0; i < 3; i++) ctx.fillRect(-L * 0.46 + i * 14, -F - R * 0.7, 8, 7);
+    }
+    if (kind === 'flagship' || kind === 'fleet') {
+      ctx.fillStyle = d.trim; ctx.font = '600 ' + (kind === 'fleet' ? 12 : 10) + 'px "IM Fell English SC", Georgia, serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+      try { ctx.letterSpacing = '2px'; } catch (e) { /* older browsers */ }
+      ctx.fillText(kind === 'fleet' ? 'THE DOMINGO FLEET' : 'DOMINGO1357', L * 0.04, -F * 0.2);
+      try { ctx.letterSpacing = '0px'; } catch (e) { /* ignore */ }
+    }
+    // bowsprit
+    ctx.strokeStyle = '#1b120b'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(L * 0.4, -F * 1.1); ctx.lineTo(L * 0.62, -F * 1.55); ctx.stroke();
+    // cargo for supply barges
+    if (d.cargo) {
+      ctx.fillStyle = '#5a4a2a';
+      [[-60, 14, 26], [-32, 20, 30], [-2, 16, 24], [22, 12, 20]].forEach((c) => { ctx.fillRect(c[0], -F - c[1], c[2] * 0.7, c[1]); ctx.strokeStyle = 'rgba(0,0,0,0.4)'; ctx.strokeRect(c[0], -F - c[1], c[2] * 0.7, c[1]); });
+    }
+    // --- masts and sails
+    d.masts.forEach((m, mi) => {
+      ctx.save();
+      ctx.translate(m.x, -F);
+      ctx.rotate(Math.sin(t * 0.9 + mi * 1.7) * 0.012 + sway * (mi % 2 ? -1 : 1) * 0.5);
+      ctx.strokeStyle = '#150e08'; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -m.h); ctx.stroke();
+      let bottom = -8;
+      m.sails.forEach((s, si) => {
+        const w = s[0], h = s[1], top = bottom - h;
+        const bil = w * (0.1 + 0.025 * Math.sin(t * 1.4 + mi + si)) + sway * 8;
+        const g = ctx.createLinearGradient(-w / 2, 0, w / 2 + bil, 0);
+        g.addColorStop(0, d.sail.a); g.addColorStop(1, d.sail.b);
+        sailPath(ctx, w, top, h, bil);
+        ctx.fillStyle = g; ctx.fill();
+        ctx.lineWidth = d.enemy ? 1.2 : 2; ctx.strokeStyle = d.sail.edge; ctx.stroke();
+        ctx.strokeStyle = 'rgba(0,0,0,0.16)'; ctx.lineWidth = 1;
+        [-0.17, 0.17].forEach((k) => { ctx.beginPath(); ctx.moveTo(w * k, top + 2); ctx.quadraticCurveTo(w * k + bil * 0.6, top + h * 0.5, w * k * 0.9, bottom); ctx.stroke(); });
+        ctx.strokeStyle = '#150e08'; ctx.lineWidth = 2.4;
+        ctx.beginPath(); ctx.moveTo(-w / 2 - 5, top); ctx.lineTo(w / 2 + 5, top); ctx.stroke();
+        // emblems
+        if (si === 0 && mi === (kind === 'fleet' ? 1 : 1) && d.ensign) {
+          ctx.save(); ctx.translate(bil * 0.45, top + h * 0.5);
+          if (d.ensign === 'star') { ctx.fillStyle = '#e8c97a'; star(ctx, Math.min(w, h) * 0.28, 8); ctx.fill(); ctx.fillStyle = '#7a1719'; star(ctx, Math.min(w, h) * 0.1, 8); ctx.fill(); }
+          else if (cos.standard) { ctx.fillStyle = '#d8b560'; crown(ctx, Math.min(w, h) * 0.2); ctx.fill(); }
+          else { ctx.strokeStyle = '#2c5f9e'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(0, 0, Math.min(w, h) * 0.18, 0, TAU); ctx.moveTo(-Math.min(w, h) * 0.26, 0); ctx.lineTo(Math.min(w, h) * 0.26, 0); ctx.stroke(); }
+          ctx.restore();
+        }
+        if (d.enemy && (mi + si) % 2 === 0) { // torn canvas
+          ctx.strokeStyle = 'rgba(0,0,0,0.5)'; ctx.lineWidth = 1.4;
+          ctx.beginPath(); ctx.moveTo(-w * 0.2, top + h * 0.45); ctx.lineTo(-w * 0.05, top + h * 0.62); ctx.lineTo(-w * 0.18, top + h * 0.78); ctx.stroke();
+        }
+        bottom = top - 6;
+      });
+      // pennant
+      const fl = d.flag, len = 26 + (mi === 1 ? 8 : 0), wv = Math.sin(t * 5 + mi) * 3;
+      ctx.fillStyle = fl;
+      ctx.beginPath(); ctx.moveTo(0, -m.h); ctx.quadraticCurveTo(len * 0.5, -m.h + 2 + wv, len, -m.h + 6 + wv); ctx.quadraticCurveTo(len * 0.5, -m.h + 9 + wv, 0, -m.h + 10); ctx.closePath(); ctx.fill();
+      if (d.enemy && mi === 0) { ctx.fillStyle = '#d9d5c4'; ctx.beginPath(); ctx.arc(len * 0.3, -m.h + 5 + wv * 0.4, 2.2, 0, TAU); ctx.fill(); }
+      if (cos.pennant && kind === 'flagship' && mi === 1) {
+        ctx.fillStyle = '#e8c97a'; ctx.beginPath(); ctx.moveTo(0, -m.h - 1); ctx.quadraticCurveTo(34, -m.h - 6 + wv, 70, -m.h + 2 + wv * 1.4); ctx.quadraticCurveTo(34, -m.h + 2 + wv, 0, -m.h + 6); ctx.closePath(); ctx.fill();
+      }
+      if (cos.standard && kind === 'fleet' && mi === 2) {
+        ctx.fillStyle = '#2c5f9e'; ctx.fillRect(2, -m.h - 4, 30, 20 + wv * 0.5);
+        ctx.fillStyle = '#d8b560'; crown(ctx, 6); ctx.save(); ctx.translate(17, -m.h + 7); ctx.fill(); ctx.restore();
+      }
+      ctx.restore();
+    });
+    // stern lantern glow (additive, restrained)
+    const lanternBoost = cos.lantern && kind === 'flagship' ? 1.7 : 1;
+    const lx = -L / 2 + 10, ly = -F - R - 8;
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    const flick = 0.85 + 0.15 * Math.sin(t * 9 + L);
+    const lg = ctx.createRadialGradient(lx, ly, 0, lx, ly, 26 * lanternBoost);
+    lg.addColorStop(0, 'rgba(255,196,96,' + (0.55 * flick) + ')'); lg.addColorStop(1, 'rgba(255,160,60,0)');
+    ctx.fillStyle = lg; ctx.beginPath(); ctx.arc(lx, ly, 26 * lanternBoost, 0, TAU); ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = '#ffd27a'; ctx.fillRect(lx - 2, ly - 3, 4, 6);
+    // battle damage
+    if (o.hits && o.hits.length) {
+      o.hits.forEach((h, i) => {
+        const fl2 = 0.7 + 0.3 * Math.sin(t * 14 + i * 2);
+        ctx.fillStyle = 'rgba(8,6,4,0.8)'; ctx.beginPath(); ctx.arc(h.x, h.y, 7 + h.a * 3, 0, TAU); ctx.fill();
+        ctx.save(); ctx.globalCompositeOperation = 'lighter';
+        const g2 = ctx.createRadialGradient(h.x, h.y, 0, h.x, h.y, 20);
+        g2.addColorStop(0, 'rgba(255,150,50,' + (0.7 * fl2 * h.a) + ')'); g2.addColorStop(1, 'rgba(255,90,20,0)');
+        ctx.fillStyle = g2; ctx.beginPath(); ctx.arc(h.x, h.y, 20, 0, TAU); ctx.fill(); ctx.restore();
+      });
+    }
+    ctx.restore();
+  }
+
+  function ports(kind) {
+    const d = DEFS[kind]; const out = [];
+    for (let r = 0; r < Math.max(1, d.rows); r++) for (let i = 0; i < Math.max(1, d.nPorts); i++) {
+      out.push({ x: -d.L * 0.27 + (i / Math.max(1, d.nPorts - 1)) * d.L * 0.58 + 6, y: -d.F * (d.rows === 2 ? 0.8 - r * 0.38 : 0.6) });
+    }
+    return out;
+  }
+  return { DEFS, draw, ports, TAU };
+})();
+
+
+/* =========================================================================
+   Layer 4a: sea, sky and the hero scene (DOMINGO1357 with the Domingo Fleet)
+   ========================================================================= */
+const Sea = (() => {
+  const STARS = [];
+  let seed = 7;
+  const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  for (let i = 0; i < 80; i++) STARS.push({ x: rnd(), y: rnd(), r: rnd() > 0.85 ? 2 : 1.2, a: 0.35 + rnd() * 0.5, tw: 0.5 + rnd() * 2 });
+  const hs = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+
+  function gradient(ctx, hz, H) {
+    const g = ctx.createLinearGradient(0, hz, 0, H);
+    g.addColorStop(0, '#1b4258'); g.addColorStop(0.35, '#0e2a40'); g.addColorStop(1, '#040f1a');
+    return g;
+  }
+  function sky(ctx, W, H, hz, t, o) {
+    o = o || {};
+    const g = ctx.createLinearGradient(0, 0, 0, hz);
+    g.addColorStop(0, '#040a14'); g.addColorStop(0.55, '#0c2340'); g.addColorStop(0.9, '#27475b'); g.addColorStop(1, '#4a6a72');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, hz + 1);
+    STARS.forEach((s) => {
+      ctx.fillStyle = 'rgba(236,230,211,' + (s.a * (0.65 + 0.35 * Math.sin(t * s.tw + s.x * 9))) + ')';
+      ctx.fillRect(s.x * W, s.y * hz * 0.78, s.r, s.r);
+    });
+    const mr = Math.max(14, Math.min(W, H) * 0.045), mx = W * 0.84, my = hz * 0.32;
+    const mg = ctx.createRadialGradient(mx, my, mr * 0.6, mx, my, mr * 7);
+    mg.addColorStop(0, 'rgba(210,225,235,0.28)'); mg.addColorStop(1, 'rgba(210,225,235,0)');
+    ctx.fillStyle = mg; ctx.beginPath(); ctx.arc(mx, my, mr * 7, 0, Art.TAU); ctx.fill();
+    ctx.fillStyle = '#eee9d6'; ctx.beginPath(); ctx.arc(mx, my, mr, 0, Art.TAU); ctx.fill();
+    ctx.fillStyle = 'rgba(150,150,130,0.25)'; ctx.beginPath(); ctx.arc(mx - mr * 0.3, my - mr * 0.15, mr * 0.28, 0, Art.TAU); ctx.arc(mx + mr * 0.35, my + mr * 0.3, mr * 0.2, 0, Art.TAU); ctx.fill();
+    // drifting mist bands
+    for (let i = 0; i < 3; i++) {
+      const cx = ((t * (6 + i * 3) + i * W * 0.4) % (W * 1.4)) - W * 0.2, cy = hz - hz * (0.1 + i * 0.12);
+      const mg2 = ctx.createRadialGradient(cx, cy, 0, cx, cy, W * 0.3);
+      mg2.addColorStop(0, 'rgba(180,205,215,0.10)'); mg2.addColorStop(1, 'rgba(180,205,215,0)');
+      ctx.save(); ctx.translate(cx, cy); ctx.scale(1, 0.18); ctx.translate(-cx, -cy); ctx.fillStyle = mg2; ctx.beginPath(); ctx.arc(cx, cy, W * 0.3, 0, Art.TAU); ctx.fill(); ctx.restore();
+    }
+    if (o.island) island(ctx, W, H, hz, t, o.islandX == null ? 0.03 : o.islandX);
+  }
+  function island(ctx, W, H, hz, t, fx) {
+    const x0 = W * fx, w = Math.max(120, W * 0.2), h = Math.max(30, H * 0.075);
+    ctx.fillStyle = '#050d17';
+    ctx.beginPath(); ctx.moveTo(x0, hz + 1);
+    ctx.bezierCurveTo(x0 + w * 0.2, hz - h * 0.2, x0 + w * 0.3, hz - h, x0 + w * 0.5, hz - h);
+    ctx.bezierCurveTo(x0 + w * 0.7, hz - h, x0 + w * 0.8, hz - h * 0.2, x0 + w, hz + 1); ctx.closePath(); ctx.fill();
+    const tx = x0 + w * 0.5, ty = hz - h;
+    ctx.fillRect(tx - 4, ty - h * 0.6, 8, h * 0.6);
+    ctx.fillStyle = '#ffcf7a'; ctx.fillRect(tx - 1.5, ty - h * 0.45, 3, 4); ctx.fillRect(x0 + w * 0.3, hz - h * 0.35, 2, 2); ctx.fillRect(x0 + w * 0.66, hz - h * 0.3, 2, 2);
+    const bg = ctx.createRadialGradient(tx, ty - h * 0.62, 0, tx, ty - h * 0.62, 26);
+    bg.addColorStop(0, 'rgba(255,205,120,' + (0.7 + 0.2 * Math.sin(t * 2)) + ')'); bg.addColorStop(1, 'rgba(255,205,120,0)');
+    ctx.fillStyle = bg; ctx.beginPath(); ctx.arc(tx, ty - h * 0.62, 26, 0, Art.TAU); ctx.fill();
+  }
+  function back(ctx, W, H, hz, t, o) {
+    o = o || {};
+    ctx.fillStyle = gradient(ctx, hz, H); ctx.fillRect(0, hz, W, H - hz + 1);
+    const lines = o.low ? 3 : 8, span = H - hz;
+    if (!o.low) {
+      const mx = W * 0.84;
+      for (let i = 0; i < 46; i++) {
+        const k = hs(i + 1), y = hz + 2 + Math.pow(k, 1.5) * span * 0.85;
+        const spread = 6 + (y - hz) * 0.5, x = mx + (hs(i * 3.3) - 0.5) * spread + Math.sin(t * 1.2 + i) * 4;
+        const wd = 6 + hs(i * 7.7) * 22 * (0.4 + k);
+        ctx.fillStyle = 'rgba(225,235,230,' + (0.05 + 0.2 * (1 - k) * (0.6 + 0.4 * Math.sin(t * 2 + i))) + ')';
+        ctx.fillRect(x - wd / 2, y, wd, 1.4);
+      }
+    }
+    for (let k = 0; k < lines; k++) {
+      const y0 = hz + Math.pow((k + 1) / lines, 1.7) * span * 0.95, amp = 1 + k * 0.7;
+      ctx.beginPath();
+      for (let x = 0; x <= W; x += 14) { const y = y0 + Math.sin(x * (0.012 - k * 0.0006) + t * (0.6 + k * 0.1) + k) * amp; if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); }
+      ctx.strokeStyle = 'rgba(159,203,196,' + (0.05 + k * 0.012) + ')'; ctx.lineWidth = 1 + k * 0.15; ctx.stroke();
+    }
+  }
+  const waveY = (x, yw, t, amp) => yw + Math.sin(x * 0.03 + t * 1.6) * amp + Math.sin(x * 0.011 - t * 0.9) * amp * 0.8;
+  /* Clip to everything above the wavy waterline, so a hull is hidden where it sits under the water. */
+  function clipAbove(ctx, W, yw, t, amp) {
+    ctx.beginPath(); ctx.moveTo(-500, -4000);
+    for (let x = -500; x <= W + 500; x += 12) ctx.lineTo(x, waveY(x, yw, t, amp));
+    ctx.lineTo(W + 500, -4000); ctx.closePath(); ctx.clip();
+  }
+  function foam(ctx, x0, x1, yw, t, amp, alpha) {
+    [[0, 1.6, alpha], [3, 1, alpha * 0.5]].forEach((l) => {
+      ctx.beginPath();
+      for (let x = x0; x <= x1; x += 8) { const y = waveY(x, yw, t, amp) + l[0]; if (x === x0) ctx.moveTo(x, y); else ctx.lineTo(x, y); }
+      ctx.strokeStyle = 'rgba(236,230,211,' + l[2] + ')'; ctx.lineWidth = l[1]; ctx.stroke();
+    });
+  }
+  function wake(ctx, x, y, s, t, len) {
+    for (let i = 0; i < 9; i++) {
+      const k = (i + (t * 0.6 % 1)) / 9;
+      ctx.fillStyle = 'rgba(236,230,211,' + (0.22 * (1 - k)) + ')';
+      ctx.beginPath(); ctx.ellipse(x - k * len * s, y + 3 * s, 16 * s * (0.5 + k), 2.2 * s * (0.6 + k), 0, 0, Art.TAU); ctx.fill();
+    }
+  }
+  function distantShips(ctx, W, hz, t) {
+    [[0.62, 0.16], [0.9, 0.11]].forEach((p, i) => {
+      ctx.save(); ctx.translate(W * p[0] + Math.sin(t * 0.05 + i) * 6, hz + 1); ctx.scale(p[1] * 0.5, p[1] * 0.5);
+      ctx.globalAlpha = 0.65; Art.draw(ctx, i ? 'sloop' : 'brig', { t }); ctx.restore();
+    });
+  }
+  return { gradient, sky, back, clipAbove, foam, waveY, wake, distantShips, island, hs };
+})();
+
+const Hero = {
+  cv: null, ctx: null, W: 0, H: 0, dpr: 1, raf: 0, last: 0, t0: 0, visible: true, still: false, cosm: {}, lowPower: false,
+  init(canvas) {
+    this.cv = canvas; this.ctx = canvas.getContext('2d');
+    this.t0 = performance.now();
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => this.resize()) : null;
+    if (ro) ro.observe(canvas.parentElement); else window.addEventListener('resize', () => this.resize());
+    document.addEventListener('visibilitychange', () => this.kick());
+    if (typeof IntersectionObserver !== 'undefined') new IntersectionObserver((e) => { this.visible = e[0].isIntersecting; this.kick(); }).observe(canvas);
+    this.resize();
+  },
+  resize() {
+    const r = this.cv.parentElement.getBoundingClientRect();
+    this.dpr = Math.min(window.devicePixelRatio || 1, this.lowPower ? 1 : 2);
+    this.W = Math.max(280, Math.round(r.width)); this.H = Math.max(280, Math.round(r.height));
+    this.cv.width = Math.round(this.W * this.dpr); this.cv.height = Math.round(this.H * this.dpr);
+    this.draw((performance.now() - this.t0) / 1000);
+    this.kick();
+  },
+  setMode(still, lowPower, cosm) { this.still = still; this.lowPower = lowPower; this.cosm = cosm || {}; this.draw((performance.now() - this.t0) / 1000); this.kick(); },
+  kick() {
+    cancelAnimationFrame(this.raf);
+    if (this.still || !this.visible || document.hidden) return;
+    const loop = (now) => {
+      this.raf = requestAnimationFrame(loop);
+      if (now - this.last < (this.lowPower ? 66 : 33)) return;
+      this.last = now;
+      try { this.draw((now - this.t0) / 1000); } catch (e) { cancelAnimationFrame(this.raf); console.error(e); }
+    };
+    this.raf = requestAnimationFrame(loop);
+  },
+  draw(t) {
+    const ctx = this.ctx, W = this.W, H = this.H;
+    if (!ctx) return;
+    ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+    const narrow = W < 720;
+    const hz = H * (narrow ? 0.66 : 0.5);
+    Sea.sky(ctx, W, H, hz, t, { island: true, islandX: narrow ? 0.0 : 0.02 });
+    Sea.back(ctx, W, H, hz, t, { low: this.lowPower });
+    Sea.distantShips(ctx, W, hz, t);
+    const flagLen = narrow ? Math.min(W * 0.42, 190) : Math.min(W * 0.3, 380);
+    const sF = flagLen / Art.DEFS.flagship.L, sFl = (flagLen * 1.12) / Art.DEFS.fleet.L;
+    const yF = hz + (H - hz) * (narrow ? 0.5 : 0.54), yFl = hz + (H - hz) * (narrow ? 0.3 : 0.34);
+    const xF = W * (narrow ? 0.7 : 0.76), xFl = W * (narrow ? 0.3 : 0.52);
+    const bobFl = Math.sin(t * 0.7 + 1.1) * 2.2 * sFl, bobF = Math.sin(t * 0.8) * 2.6 * sF;
+    // The Domingo Fleet trails the flagship, a little behind in phase.
+    Sea.wake(ctx, xFl - Art.DEFS.fleet.L * 0.45 * sFl, yFl, sFl, t, 150);
+    ctx.save(); Sea.clipAbove(ctx, W, yFl, t, 2.2);
+    ctx.translate(xFl, yFl + bobFl); ctx.rotate(Math.sin(t * 0.6 + 1) * 0.008); ctx.scale(sFl, sFl); Art.draw(ctx, 'fleet', { t: t - 0.6, cosm: this.cosm }); ctx.restore();
+    Sea.foam(ctx, xFl - Art.DEFS.fleet.L * sFl * 0.55, xFl + Art.DEFS.fleet.L * sFl * 0.55, yFl, t, 2.2, 0.28);
+    const fog = ctx.createLinearGradient(0, yFl - Art.DEFS.fleet.top * sFl, 0, yFl + 8);
+    fog.addColorStop(0, 'rgba(120,150,165,0.0)'); fog.addColorStop(1, 'rgba(120,150,165,0.2)');
+    ctx.fillStyle = fog; ctx.fillRect(xFl - Art.DEFS.fleet.L * sFl * 0.6, yFl - Art.DEFS.fleet.top * sFl, Art.DEFS.fleet.L * sFl * 1.2, Art.DEFS.fleet.top * sFl + 8);
+    Sea.wake(ctx, xF - Art.DEFS.flagship.L * 0.45 * sF, yF, sF, t, 190);
+    ctx.save(); Sea.clipAbove(ctx, W, yF, t, 3);
+    ctx.translate(xF, yF + bobF); ctx.rotate(Math.sin(t * 0.8 + 0.4) * 0.01); ctx.scale(sF, sF); Art.draw(ctx, 'flagship', { t, cosm: this.cosm }); ctx.restore();
+    Sea.foam(ctx, xF - Art.DEFS.flagship.L * sF * 0.55, xF + Art.DEFS.flagship.L * sF * 0.55, yF, t, 3, 0.34);
+  }
+};
+
+
+/* =========================================================================
+   Layer 4b: the attack-and-sink battle. A self-contained timeline on a canvas.
+   Phases: reveal (flagship only) -> acquire -> engage -> sink -> settle.
+   The returned promise always resolves (finish, skip, error or timeout), so a task
+   can never be stuck behind a broken animation.
+   ========================================================================= */
+const Battle = {
+  start(host, plan, task, cfg) {
+    const cv = document.createElement('canvas');
+    cv.setAttribute('aria-hidden', 'true');
+    host.appendChild(cv);
+    const ctx = cv.getContext('2d');
+    const reduced = !!cfg.reduced;
+    let q = cfg.low ? 0.4 : 1;
+    const K = reduced ? 1 : (cfg.fast ? 0.5 : 1);
+    const big = !!plan.flagship;
+    const eKind = plan.enemy.icon, aKind = plan.attacker;
+    const eD = Art.DEFS[eKind], aD = Art.DEFS[aKind];
+    const dRev = big && !reduced ? (plan.tier === 'milestone' ? 1700 : 1200) * K : 0;
+    const dAcq = (reduced ? 300 : 450) * K;
+    const volleys = reduced ? 1 : plan.volleys;
+    const VOL_GAP = 240 * K, FLIGHT = Math.max(190, 380 * K);
+    const dEng = reduced ? 400 : volleys * VOL_GAP + FLIGHT + 60;
+    const dSink = reduced ? 800 : 1500 * K;
+    const dSet = reduced ? 200 : 450 * K;
+    const T = { acq: [dRev, dRev + dAcq] };
+    T.eng = [T.acq[1], T.acq[1] + dEng]; T.sink = [T.eng[1], T.eng[1] + dSink]; T.set = [T.sink[1], T.sink[1] + dSet];
+    const total = T.set[1];
+
+    let W = 0, H = 0, dpr = 1, U = 1, vig = null;
+    const size = () => {
+      const r = host.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, cfg.low ? 1 : 2);
+      W = Math.max(280, Math.round(r.width)); H = Math.max(280, Math.round(r.height));
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); U = H / 720;
+      vig = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.max(W, H) * 0.75);
+      vig.addColorStop(0, 'rgba(0,0,0,0)'); vig.addColorStop(1, 'rgba(0,0,0,0.55)');
+    };
+    const onResize = () => { size(); if (L) layout(); };
+    window.addEventListener('resize', onResize);
+
+    const ease = (x) => x * x * (3 - 2 * x);
+    const outC = (x) => 1 - Math.pow(1 - x, 3);
+    const cl = (x) => Math.max(0, Math.min(1, x));
+    const lerp = (a, b, x) => a + (b - a) * x;
+    const rnd = (a, b) => a + Math.random() * (b - a);
+
+    let done = false, skipped = false, destroyed = false, resolveFn = null;
+    const promise = new Promise((res) => { resolveFn = res; });
+    const finish = (info) => { if (done) return; done = true; resolveFn(info || { ok: true }); };
+    const hardStop = setTimeout(() => finish({ ok: false, timeout: true }), total + 2500);
+
+    const P = [], shots = [], hits = [];
+    const cam = { kick: 0, shake: 0, flash: 0, recoil: 0, jit: 0, fireGlow: 0 };
+    let skipHandled = false, ev = 0, t0 = 0, last = 0, fcount = 0, ftime = 0, bubAcc = 0, smokeAcc = 0, sinkSplashed = false, sinkStarted = false, volleyNo = 0;
+    const stage = (txt) => { try { cfg.onStage && cfg.onStage(txt); } catch (e) { /* caption is optional */ } };
+
+    /* ---------- layout ---------- */
+    let L = null;
+    size();
+    const layout = () => {
+      const narrow = W < 640, hz = H * 0.5;
+      const aMul = { scout: 0.78, warship: 0.95, flagship: 1.18 }[aKind] || 1;
+      const eMul = { barge: 0.85, sloop: 0.8, brig: 1, galleon: 1.12 }[eKind] || 1;
+      const aLen = Math.min(W * (narrow ? 0.44 : 0.36), 440) * aMul, eLen = Math.min(W * (narrow ? 0.44 : 0.34), 420) * eMul;
+      const fLen = aLen * 1.25;
+      L = { hz, aS: aLen / aD.L, eS: eLen / eD.L, aLen, eLen, aX: W * 0.27, aY: hz + (H - hz) * 0.56, eXF: W * 0.73, eY: hz + (H - hz) * 0.46,
+        fS: fLen / Art.DEFS.fleet.L, fX: W * (narrow ? 0.0 : 0.07), fY: hz + (H - hz) * (plan.fleet === 'full' ? 0.3 : 0.2) };
+    };
+
+    /* ---------- particles ---------- */
+    const add = (p) => { if (P.length > 420) P.shift(); P.push(p); };
+    const smoke = (x, y, s, vx, vy, life) => add({ k: 'smoke', x, y, vx, vy, life, max: life, size: s, grow: s * 1.4 });
+    const spark = (x, y) => { const a = rnd(0, Math.PI * 2), sp = rnd(120, 380) * U; add({ k: 'spark', x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 120 * U, life: rnd(0.25, 0.5), max: 0.5 }); };
+    const drop = (x, y, vx, vy, yw) => add({ k: 'drop', x, y, vx, vy, life: 2, max: 2, yw, size: rnd(1.4, 3.2) });
+    const debris = (x, y, vx, vy, yw) => add({ k: 'debris', x, y, vx, vy, rot: rnd(0, 6), vr: rnd(-8, 8), life: 6, max: 6, yw, size: rnd(9, 20) * U * 1.2, seed: rnd(0, 6) });
+    const bubble = (x, y, yw) => add({ k: 'bubble', x, y, vy: -rnd(18, 40) * U, life: 3, max: 3, yw, size: rnd(1.5, 4.5) * U, seed: rnd(0, 6) });
+    const ring = (x, y, size, life) => add({ k: 'ring', x, y, life, max: life, size });
+    const flash = (x, y, size, life) => add({ k: 'flash', x, y, life, max: life, size });
+    const splashAt = (x, yw, power) => {
+      const n = Math.round(power * 16 * q);
+      for (let i = 0; i < n; i++) drop(x + rnd(-8, 8) * U, yw, rnd(-90, 90) * U, -rnd(220, 520) * U * (0.6 + power * 0.4), yw);
+      ring(x, yw, 30 * U * power, 0.9); ring(x, yw, 18 * U * power, 0.6);
+    };
+
+    /* ---------- shooting ---------- */
+    const enemyWorld = (lx, ly) => ({ x: ex() - lx * L.eS, y: L.eY + ly * L.eS });
+    const ex = () => reduced ? L.eXF : lerp(W * 1.12, L.eXF, outC(cl(ev / Math.max(1, T.acq[1]))));
+    const ax = () => (big && !reduced) ? lerp(-W * 0.3, L.aX, outC(cl(ev / Math.max(1, dRev || 1)))) : L.aX;
+    const fx = () => (big && !reduced) ? lerp(-W * 0.6, L.fX, outC(cl((ev - 120) / Math.max(1, (dRev || 1))))) : L.fX;
+
+    const fireVolley = (isLast) => {
+      volleyNo++;
+      const ports = Art.ports(aKind);
+      const n = Math.min(ports.length, { scout: 2, warship: 3, flagship: 5 }[aKind] || 3);
+      const off = volleyNo % 2;
+      for (let i = 0; i < n; i++) {
+        const p = ports[Math.min(ports.length - 1, Math.floor(((i + 0.5 * off) / n) * ports.length))];
+        const delay = (i * 34 + rnd(0, 40)) * K;
+        const hit = isLast || Math.random() < 0.72 || reduced;
+        shots.push({ at: ev + delay, p, hit, first: i === 0, fired: false, done: false });
+      }
+      if (plan.fleet === 'full') for (let i = 0; i < 4; i++) shots.push({ at: ev + i * 60 * K, fleet: true, fired: false, done: true, p: Art.ports('fleet')[i * 2 + 1] });
+      cam.recoil = 1;
+    };
+    const muzzle = (wx, wy, s) => {
+      if (!reduced) { flash(wx, wy, 46 * s * U, 0.12); cam.fireGlow = Math.min(1, cam.fireGlow + 0.25); }
+      const n = Math.max(1, Math.round(3 * q));
+      for (let i = 0; i < n; i++) smoke(wx + rnd(0, 14) * U, wy + rnd(-4, 4) * U, rnd(10, 18) * s * U, rnd(20, 70) * U, -rnd(8, 30) * U, rnd(0.9, 1.5));
+    };
+    const impact = (wx, wy, hit) => {
+      if (hit) {
+        const lx = (ex() - wx) / L.eS, ly = (wy - L.eY) / L.eS;
+        hits.push({ x: lx, y: ly, a: 1 });
+        if (!reduced) {
+          flash(wx, wy, 70 * U, 0.16);
+          const n = Math.round(10 * q); for (let i = 0; i < n; i++) spark(wx, wy);
+          for (let i = 0; i < 2; i++) debris(wx, wy, rnd(-180, 120) * U, -rnd(160, 330) * U, L.eY);
+          for (let i = 0; i < Math.max(1, Math.round(3 * q)); i++) smoke(wx, wy, rnd(10, 22) * U, rnd(-20, 30) * U, -rnd(20, 50) * U, rnd(0.9, 1.6));
+          cam.kick += 0.022; cam.shake = Math.min(14, cam.shake + 7); cam.flash = Math.min(0.35, cam.flash + 0.14); cam.jit = 1;
+        } else { flash(wx, wy, 26 * U, 0.35); }
+        Sfx.impact();
+      } else { splashAt(wx, L.eY + 2, 0.8); Sfx.splash(false); }
+    };
+
+    /* ---------- timeline events ---------- */
+    const events = [];
+    const at = (ms, fn) => events.push({ ms, fn, done: false });
+    if (dRev) { at(0, () => { stage(plan.fleet === 'full' ? 'DOMINGO1357 AND THE DOMINGO FLEET ENTER THE BATTLE' : 'DOMINGO1357 ENTERS THE BATTLE'); Sfx.horn(); }); }
+    at(T.acq[0], () => { stage('TARGET LOCKED: ' + plan.enemy.name.toUpperCase()); Sfx.ping(); });
+    at(T.eng[0], () => stage(plan.tier === 'milestone' ? 'FLAGSHIP BROADSIDE' : 'BROADSIDE'));
+    for (let v = 0; v < volleys; v++) at(T.eng[0] + 80 * K + v * VOL_GAP, () => fireVolley(v === volleys - 1));
+    at(T.sink[0], () => {
+      stage('SHE IS TAKING WATER'); Sfx.creak(); sinkStarted = true;
+      if (!reduced) { ring(ex(), L.eY, 60 * L.eS, 1.2); for (let i = 0; i < Math.round(5 * q) + 1; i++) debris(ex() + rnd(-60, 60) * L.eS, L.eY - 30 * L.eS, rnd(-140, 140) * U, -rnd(120, 260) * U, L.eY); }
+    });
+    at(T.set[0], () => stage('SHE IS GONE'));
+    const sinkDown = (tS) => { if (!sinkStarted) return 0; return Math.pow(cl(tS), 1.35); };
+
+    /* ---------- update ---------- */
+    const update = (dt, t) => {
+      // shots
+      for (let i = 0; i < shots.length; i++) {
+        const s = shots[i];
+        if (!s.fired && ev >= s.at) {
+          s.fired = true;
+          const wx = (s.fleet ? fx() : ax()) + s.p.x * (s.fleet ? L.fS : L.aS) + 14 * L.aS, wy = (s.fleet ? L.fY : L.aY) + s.p.y * (s.fleet ? L.fS : L.aS);
+          muzzle(wx, wy, s.fleet ? 0.8 : 1);
+          if (!s.fleet) {
+            if (s.first) Sfx.cannon();
+            if (reduced) { const tp = enemyWorld(rnd(-0.28, 0.3) * eD.L, -rnd(0.15, 0.7) * eD.F); impact(tp.x, tp.y, true); s.done = true; }
+            else {
+              const tp = s.hit ? enemyWorld(rnd(-0.28, 0.3) * eD.L, -rnd(0.15, 0.7) * eD.F) : { x: ex() - rnd(-0.1, 0.5) * L.eLen, y: L.eY };
+              s.sx = wx; s.sy = wy; s.tx = tp.x; s.ty = tp.y; s.dur = FLIGHT; s.t0 = ev; s.arc = rnd(50, 110) * U;
+            }
+          }
+        }
+      }
+      for (let i = shots.length - 1; i >= 0; i--) {
+        const s = shots[i];
+        if (s.fired && !s.done && !s.fleet) {
+          const p = cl((ev - s.t0) / s.dur);
+          s.x = lerp(s.sx, s.tx, p); s.y = lerp(s.sy, s.ty, p) - Math.sin(p * Math.PI) * s.arc;
+          if (Math.random() < 0.5 * q) smoke(s.x, s.y, 4 * U, 0, 0, 0.5);
+          if (p >= 1) { s.done = true; impact(s.tx, s.ty, s.hit); }
+        }
+        if (s.fired && s.done && ev - (s.t0 || s.at) > 1000) shots.splice(i, 1);
+      }
+      // sinking ambience
+      const tS = cl((ev - T.sink[0]) / dSink);
+      if (sinkStarted && !reduced && tS < 1) {
+        bubAcc += dt * 55 * q * (0.3 + tS); while (bubAcc > 1) { bubAcc -= 1; bubble(ex() + rnd(-0.3, 0.3) * L.eLen, L.eY + rnd(8, 60) * U, L.eY); }
+        smokeAcc += dt * 14 * q * (1 - tS); while (smokeAcc > 1) { smokeAcc -= 1; const h = hits[Math.floor(Math.random() * hits.length)]; if (h) { const w = enemyWorld(h.x, h.y); smoke(w.x, w.y - 6 * U, rnd(8, 16) * U, rnd(-10, 30) * U, -rnd(30, 60) * U, rnd(1, 1.7)); } }
+      }
+      if (sinkStarted && !sinkSplashed && (tS > 0.8 || reduced && tS > 0.9)) {
+        sinkSplashed = true; splashAt(ex(), L.eY, reduced ? 0.5 : 1.7); Sfx.splash(true);
+        if (!reduced) for (let i = 0; i < Math.round(8 * q) + 2; i++) debris(ex() + rnd(-40, 40) * L.eS, L.eY, rnd(-160, 160) * U, -rnd(200, 420) * U, L.eY);
+      }
+      if (sinkSplashed && !reduced && ev < T.set[1] + 900) { bubAcc += dt * 14 * q; while (bubAcc > 1) { bubAcc -= 1; bubble(ex() + rnd(-0.25, 0.25) * L.eLen, L.eY + rnd(4, 30) * U, L.eY); } }
+      // camera feel
+      cam.kick *= Math.exp(-7 * dt); cam.shake *= Math.exp(-9 * dt); cam.flash *= Math.exp(-8 * dt); cam.recoil *= Math.exp(-6 * dt); cam.jit *= Math.exp(-8 * dt); cam.fireGlow *= Math.exp(-6 * dt);
+      // particles
+      const g = 900 * U;
+      for (let i = P.length - 1; i >= 0; i--) {
+        const p = P[i]; p.life -= dt;
+        if (p.life <= 0) { P.splice(i, 1); continue; }
+        if (p.k === 'smoke') { p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= 0.985; p.size += p.grow * dt; }
+        else if (p.k === 'spark') { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 600 * U * dt; }
+        else if (p.k === 'drop') { p.vy += g * 1.2 * dt; p.x += p.vx * dt; p.y += p.vy * dt; if (p.y >= p.yw) P.splice(i, 1); }
+        else if (p.k === 'debris') { p.vy += g * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.rot += p.vr * dt; if (p.y >= p.yw && p.vy > 0) { p.k = 'float'; p.life = 5; p.max = 5; ring(p.x, p.yw, 14 * U, 0.6); } }
+        else if (p.k === 'float') { p.x += p.vx * 0.15 * dt; p.y = p.yw + Math.sin(t * 2.1 + p.seed) * 2.2 * U; p.rot += Math.sin(t + p.seed) * 0.01; }
+        else if (p.k === 'bubble') { p.y += p.vy * dt; p.x += Math.sin(t * 5 + p.seed) * 9 * dt; if (p.y <= p.yw) { ring(p.x, p.yw, 7 * U, 0.4); P.splice(i, 1); } }
+      }
+    };
+
+    /* ---------- drawing ---------- */
+    const drawParticles = (t) => {
+      const order = ['ring', 'float', 'debris', 'bubble', 'drop', 'smoke', 'spark', 'flash'];
+      order.forEach((kind) => {
+        P.forEach((p) => {
+          if (p.k !== kind) return;
+          const a = cl(p.life / p.max);
+          if (kind === 'ring') { const pr = 1 - a; ctx.strokeStyle = 'rgba(236,230,211,' + (0.5 * a) + ')'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(p.x, p.y, p.size * (0.3 + pr * 1.4), p.size * (0.3 + pr * 1.4) * 0.22, 0, 0, Art.TAU); ctx.stroke(); }
+          else if (kind === 'float' || kind === 'debris') { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.globalAlpha = kind === 'float' ? Math.min(1, a * 3) : 1; ctx.fillStyle = '#34261a'; ctx.fillRect(-p.size / 2, -2 * U, p.size, 4 * U); ctx.fillStyle = 'rgba(201,162,74,0.5)'; ctx.fillRect(-p.size / 2, -2 * U, p.size, 1 * U); ctx.restore(); }
+          else if (kind === 'bubble') { ctx.strokeStyle = 'rgba(200,230,230,' + (0.6 * Math.min(1, a * 2)) + ')'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Art.TAU); ctx.stroke(); }
+          else if (kind === 'drop') { ctx.fillStyle = 'rgba(225,238,240,0.8)'; ctx.beginPath(); ctx.arc(p.x, p.y, p.size * U + 0.4, 0, Art.TAU); ctx.fill(); }
+          else if (kind === 'smoke') { const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, Math.max(1, p.size)); g.addColorStop(0, 'rgba(70,70,74,' + (0.5 * a) + ')'); g.addColorStop(1, 'rgba(70,70,74,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(1, p.size), 0, Art.TAU); ctx.fill(); }
+          else if (kind === 'spark') { ctx.strokeStyle = 'rgba(255,' + Math.round(150 + 90 * a) + ',60,' + a + ')'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - p.vx * 0.03, p.y - p.vy * 0.03); ctx.stroke(); }
+          else if (kind === 'flash') { ctx.save(); ctx.globalCompositeOperation = 'lighter'; const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size); g.addColorStop(0, 'rgba(255,240,200,' + a + ')'); g.addColorStop(0.35, 'rgba(255,170,70,' + (0.7 * a) + ')'); g.addColorStop(1, 'rgba(255,120,30,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Art.TAU); ctx.fill(); ctx.restore(); }
+        });
+      });
+      shots.forEach((s) => { if (s.fired && !s.done && !s.fleet && s.x != null) { ctx.fillStyle = '#0a0a0c'; ctx.beginPath(); ctx.arc(s.x, s.y, 3.6 * U + 0.6, 0, Art.TAU); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.beginPath(); ctx.arc(s.x - 1, s.y - 1, 1.1, 0, Art.TAU); ctx.fill(); } });
+    };
+    const drawShip = (kind, x, y, s, t, extra) => {
+      ctx.save(); Sea.clipAbove(ctx, W, y, t, 3);
+      ctx.translate(x, y + (extra.dy || 0) + Math.sin(t * 0.85 + x) * 2.4 * s * (1 - (extra.dy ? 1 : 0)));
+      ctx.rotate(extra.rot || 0); ctx.scale(extra.flip ? -s : s, s);
+      if (extra.alpha != null) ctx.globalAlpha = extra.alpha;
+      Art.draw(ctx, kind, extra.o);
+      ctx.restore();
+    };
+    const reticle = (t, p) => {
+      const cx = ex(), cy = L.eY - eD.F * L.eS * 1.6, r0 = L.eLen * 0.4, r = r0 * lerp(1.9, 1, outC(p));
+      const col = p > 0.85 ? '#e0746d' : '#e8c97a';
+      ctx.save(); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 2; ctx.globalAlpha = 0.9;
+      ctx.setLineDash([14 * U, 10 * U]); ctx.lineDashOffset = -t * 60; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Art.TAU); ctx.stroke(); ctx.setLineDash([]);
+      for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2 + t * 0.5; ctx.beginPath(); ctx.moveTo(cx + Math.cos(a) * r * 0.78, cy + Math.sin(a) * r * 0.78); ctx.lineTo(cx + Math.cos(a) * r * 1.12, cy + Math.sin(a) * r * 1.12); ctx.stroke(); }
+      ctx.beginPath(); ctx.arc(cx, cy, 3, 0, Art.TAU); ctx.fill(); ctx.restore();
+    };
+
+    const render = (t) => {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      const tS = sinkStarted ? cl((ev - T.sink[0]) / dSink) : 0;
+      // camera
+      let zoom = 1, pan = 0;
+      if (!reduced) {
+        if (dRev && ev < T.acq[0]) zoom = lerp(1.2, 1, ease(cl(ev / dRev)));
+        else if (ev < T.eng[1]) { const p = ease(cl((ev - T.acq[0]) / (dAcq + dEng * 0.7))); zoom = lerp(1, 1.08, p); pan = -W * 0.05 * p; }
+        else { const p = ease(cl((ev - T.eng[1]) / (dSink + dSet))); zoom = lerp(1.08, 1.02, p); pan = -W * 0.05 * (1 - p); }
+        zoom += cam.kick;
+      }
+      const sx = reduced ? 0 : (Math.random() - 0.5) * cam.shake, sy = reduced ? 0 : (Math.random() - 0.5) * cam.shake;
+      ctx.save();
+      ctx.translate(W / 2 + sx, H / 2 + sy); ctx.scale(zoom, zoom); ctx.translate(-W / 2 + pan, -H / 2);
+      Sea.sky(ctx, W, H, L.hz, t, { island: true, islandX: 0.0 });
+      Sea.back(ctx, W, H, L.hz, t, { low: q < 0.7 });
+      Sea.distantShips(ctx, W, L.hz, t);
+      // fleet
+      if (plan.fleet) {
+        const fxx = fx();
+        drawShip('fleet', fxx, L.fY, L.fS * (plan.fleet === 'full' ? 1 : 0.8), t - 0.5, { o: { t, cosm: cfg.cosm } });
+        const fg = ctx.createLinearGradient(0, L.fY - 300 * L.fS, 0, L.fY); fg.addColorStop(0, 'rgba(120,150,165,0)'); fg.addColorStop(1, 'rgba(120,150,165,0.22)');
+        ctx.fillStyle = fg; ctx.fillRect(fxx - 220 * L.fS, L.fY - 300 * L.fS, 440 * L.fS, 300 * L.fS);
+      }
+      // enemy
+      const e = sinkDown(tS), d = eD;
+      const exx = ex() + (reduced ? 0 : (Math.random() - 0.5) * cam.jit * 6 * U);
+      const sinkY = e * (d.top + d.D) * L.eS * 1.08;
+      drawShip(eKind, exx, L.eY, L.eS, t, { dy: sinkY, flip: true, rot: reduced ? 0 : -0.5 * ease(tS), alpha: reduced ? 1 - 0.85 * tS : null,
+        o: { t, flood: Math.min(1, tS * 2), sway: 0.5 * tS * Math.sin(t * 6), hits } });
+      // Because drawShip clips at its own waterline, shift the clip with the sinking hull via a second water pass.
+      Sea.foam(ctx, exx - L.eLen * 0.55, exx + L.eLen * 0.55, L.eY, t, 3, 0.3);
+      // attacker
+      const axx = ax() - cam.recoil * 7 * L.aS * (reduced ? 0 : 1);
+      drawShip(aKind, axx, L.aY, L.aS, t, { rot: -cam.recoil * 0.006, o: { t, cosm: cfg.cosm } });
+      Sea.foam(ctx, axx - L.aLen * 0.55, axx + L.aLen * 0.55, L.aY, t, 3, 0.34);
+      if (ev >= T.acq[0] && !sinkStarted) reticle(t, cl((ev - T.acq[0]) / (dAcq + 60)));
+      drawParticles(t);
+      ctx.restore();
+      // screen space
+      ctx.fillStyle = vig; ctx.fillRect(0, 0, W, H);
+      if (cam.fireGlow > 0.02 && !reduced) { ctx.fillStyle = 'rgba(255,170,80,' + (0.1 * cam.fireGlow) + ')'; ctx.fillRect(0, 0, W, H); }
+      if (cam.flash > 0.01 && !reduced) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = 'rgba(255,235,205,' + cam.flash + ')'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
+      if (dRev && ev < T.acq[0]) { ctx.fillStyle = 'rgba(2,6,12,' + (0.6 * (1 - ease(cl(ev / dRev)))) + ')'; ctx.fillRect(0, 0, W, H); }
+      if (big && !reduced) { const bh = H * 0.085 * ease(cl(ev / 400)); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, bh); ctx.fillRect(0, H - bh, W, bh); }
+    };
+
+    /* ---------- main loop ---------- */
+    let raf = 0;
+    const tick = (now) => {
+      if (destroyed) return;
+      raf = requestAnimationFrame(tick);
+      try {
+        if (!t0) { t0 = now; last = now; layout(); }
+        const dt = Math.min(0.05, (now - last) / 1000); last = now;
+        ev = skipped ? total + 400 : now - t0;
+        if (!skipped) { fcount++; ftime += dt; if (fcount === 14 && ftime / fcount > 0.045 && q > 0.5) q = 0.4; }
+        if (skipped && !skipHandled) { skipHandled = true; events.forEach((x) => { x.done = true; }); sinkStarted = true; sinkSplashed = true; stage('SHE IS GONE'); }
+        for (let i = 0; i < events.length; i++) { const x = events[i]; if (!x.done && ev >= x.ms) { x.done = true; x.fn(); } }
+        update(dt, now / 1000);
+        render(now / 1000);
+        if (ev >= total) finish({ ok: true, skipped });
+      } catch (err) {
+        console.error('Battle animation error', err);
+        finish({ ok: false, error: String(err) });
+      }
+    };
+    raf = requestAnimationFrame(tick);
+
+    return {
+      promise,
+      skip() { if (done) return; skipped = true; },
+      destroy() { destroyed = true; clearTimeout(hardStop); cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); finish({ ok: true, destroyed: true }); if (cv.parentNode) cv.parentNode.removeChild(cv); }
+    };
+  }
+};
+
+
+/* =========================================================================
+   Layer 5a: interface core. Shared state, helpers, toasts, dialogs, settings.
+   Game state (S) is kept apart from view state (UI) and from animation state (Battle).
+   ========================================================================= */
+let S = DG.Store.load();
+const UI = {
+  view: 'deck', q: '', priority: 'all', sort: 'priority', newId: null, confirmDeleteId: null, engaging: false,
+  lq: '', lpriority: 'all', ldate: 'all', lon: '', confirmRecordId: null, ledgerNotice: '', samplesNoticeDismissed: false
+};
+const $ = (sel, root) => (root || document).querySelector(sel);
+const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const icon = (name, cls) => '<svg class="icon ' + (cls || '') + '" aria-hidden="true"><use href="#i-' + name + '"/></svg>';
+const pct = (n, d) => (d > 0 ? Math.min(100, Math.round((n / d) * 100)) : 0);
+
+const F = {
+  short: new Intl.DateTimeFormat(undefined, { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
+  full: new Intl.DateTimeFormat(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+  day: new Intl.DateTimeFormat(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+  time: new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' }),
+  dm: new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'short' })
+};
+const toLocalInput = (ts) => { const d = new Date(ts); return d.getFullYear() + '-' + DG.pad(d.getMonth() + 1) + '-' + DG.pad(d.getDate()) + 'T' + DG.pad(d.getHours()) + ':' + DG.pad(d.getMinutes()); };
+const num = (n) => Number(n).toLocaleString();
+
+function dueInfo(task, now) {
+  if (!task.due) return null;
+  const h = (task.due - now) / 3600000;
+  if (h < 0) return { text: 'Overdue, was due ' + F.short.format(task.due), cls: 'due-late' };
+  if (h < 24) return { text: 'Due in ' + (h < 1 ? Math.max(1, Math.round(h * 60)) + ' min' : Math.round(h) + ' h'), cls: 'due-soon' };
+  return { text: 'Due ' + F.short.format(task.due), cls: '' };
+}
+
+/* ---------- effective settings ---------- */
+const mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+const isReduced = () => S.settings.reducedMotion === 'on' || (S.settings.reducedMotion === 'system' && mq.matches);
+const isLow = () => S.settings.lowPower === 'on' || (S.settings.lowPower === 'auto' && ((navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) || (navigator.deviceMemory && navigator.deviceMemory <= 2)));
+function applyEnvironment() {
+  document.body.classList.toggle('reduce-motion', isReduced());
+  Sfx.set({ enabled: S.settings.sound, volume: S.settings.volume, ambience: S.settings.ambience });
+  const cos = DG.Rules.cosmetics(S.stats.favor);
+  Hero.setMode(isReduced(), isLow(), cos);
+  const b = $('#soundBtn');
+  b.setAttribute('aria-pressed', String(S.settings.sound));
+  b.setAttribute('aria-label', S.settings.sound ? 'Sound on. Press to mute' : 'Sound muted. Press to turn on');
+  b.innerHTML = icon(S.settings.sound ? 'sound' : 'mute');
+}
+
+/* ---------- persistence ---------- */
+function save() { const ok = DG.Store.save(S); renderStorageBanner(); return ok; }
+function renderStorageBanner() {
+  const el = $('#storageBanner');
+  let html = '';
+  if (!DG.Store.ok) html += '<div class="banner error" role="alert"><span>Saving is unavailable in this browser. Your targets work for now, but they will be lost when you close this page.</span></div>';
+  if (DG.Store.corrupt) html += '<div class="banner" role="status"><span>Your saved data could not be read, so Domingo started a fresh log. A backup copy of the old data was kept in this browser.</span></div>';
+  el.innerHTML = html;
+}
+
+/* ---------- toasts and announcements ---------- */
+function toast(msg, kind) {
+  const host = $('#toasts');
+  const el = document.createElement('div');
+  el.className = 'toast' + (kind ? ' ' + kind : '');
+  if (kind === 'error') el.setAttribute('role', 'alert');
+  el.textContent = msg;
+  host.appendChild(el);
+  while (host.children.length > 3) host.removeChild(host.firstChild);
+  setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, kind === 'error' ? 6500 : 4200);
+}
+function announce(msg) { const a = $('#announcer'); a.textContent = ''; setTimeout(() => { a.textContent = msg; }, 60); }
+
+/* ---------- dialogs ---------- */
+const Modal = {
+  last: null, onClose: null,
+  open(inner, opts) {
+    this.close(true);
+    this.last = document.activeElement;
+    this.onClose = opts && opts.onClose;
+    const root = $('#modalRoot');
+    root.innerHTML = '<div class="scrim" data-scrim><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">' + inner + '</div></div>';
+    const scrim = $('.scrim', root), dlg = $('.dialog', root);
+    scrim.addEventListener('mousedown', (e) => { if (e.target === scrim) this.close(); });
+    scrim.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { e.preventDefault(); this.close(); return; }
+      if (e.key !== 'Tab') return;
+      const f = $$('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])', dlg).filter((x) => x.offsetParent !== null || x === document.activeElement);
+      if (!f.length) return;
+      const first = f[0], lastEl = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); lastEl.focus(); }
+      else if (!e.shiftKey && document.activeElement === lastEl) { e.preventDefault(); first.focus(); }
+    });
+    const auto = $('[data-autofocus]', dlg) || $('input, select, textarea, button', dlg);
+    if (auto) setTimeout(() => auto.focus(), 20);
+    return dlg;
+  },
+  close(silent) {
+    const root = $('#modalRoot');
+    if (!root.firstChild) return;
+    root.innerHTML = '';
+    const cb = this.onClose; this.onClose = null;
+    if (!silent && this.last && this.last.focus) { try { this.last.focus(); } catch (e) { /* element gone */ } }
+    if (cb) cb();
+  }
+};
+function confirmDialog(o) {
+  return new Promise((resolve) => {
+    let settled = false;
+    const settle = (v) => { if (settled) return; settled = true; resolve(v); };
+    const dlg = Modal.open(
+      '<h3 id="dlgTitle">' + esc(o.title) + '</h3><p class="sub">' + esc(o.body) + '</p>' +
+      '<div class="dialog-actions"><button class="btn" type="button" data-no data-autofocus>' + esc(o.cancel || 'Cancel') + '</button>' +
+      '<button class="btn ' + (o.danger ? 'btn-solid-danger' : 'btn-gold') + '" type="button" data-yes>' + esc(o.yes) + '</button></div>',
+      { onClose: () => settle(false) });
+    $('[data-no]', dlg).addEventListener('click', () => Modal.close());
+    $('[data-yes]', dlg).addEventListener('click', () => { settle(true); Modal.close(); });
+  });
+}
+
+/* ---------- task form (Identify Prey) ---------- */
+function openTaskForm(task) {
+  if (UI.engaging) { toast('A battle is under way. Finish the engagement first.'); return; }
+  const editing = !!task;
+  const t = task || { title: '', description: '', priority: 'routine', category: '', due: null };
+  const radio = (v, label, cls) => '<label class="' + (cls || '') + '"><input type="radio" name="priority" value="' + v + '"' + (t.priority === v ? ' checked' : '') + '><span>' + label + '</span></label>';
+  const dlg = Modal.open(
+    '<h3 id="dlgTitle">' + (editing ? 'Edit Target' : 'Identify Prey') + '</h3>' +
+    '<p class="sub">' + (editing ? 'Adjust the details of this vessel.' : 'Name the vessel you intend to sink.') + '</p>' +
+    '<form class="form" id="taskForm" novalidate>' +
+    '<div class="field"><label for="fTitle">Target</label><input class="input" id="fTitle" name="title" type="text" maxlength="120" autocomplete="off" placeholder="What needs to be sunk?" value="' + esc(t.title) + '" data-autofocus><div class="field-error" id="eTitle" role="alert"></div></div>' +
+    '<div class="field"><label for="fDesc">Notes (optional)</label><textarea class="textarea" id="fDesc" name="description" maxlength="500" placeholder="Details, links, or the first step">' + esc(t.description) + '</textarea><div class="field-error" id="eDesc" role="alert"></div></div>' +
+    '<fieldset class="seg"><legend>Priority</legend>' + radio('routine', 'Routine') + radio('important', 'Important') + radio('critical', 'Critical', 'crit') + '</fieldset>' +
+    '<div class="form-row">' +
+    '<div class="field"><label for="fDue">Deadline (optional)</label><input class="input" id="fDue" name="due" type="datetime-local" value="' + (t.due ? toLocalInput(t.due) : '') + '"><div class="field-error" id="eDue" role="alert"></div></div>' +
+    '<div class="field"><label for="fCat">Category (optional)</label><input class="input" id="fCat" name="category" type="text" maxlength="30" list="catList" autocomplete="off" placeholder="Work, Study, Errands" value="' + esc(t.category) + '"><datalist id="catList"><option value="Work"><option value="Personal"><option value="Study"><option value="Errands"><option value="Finance"><option value="Admin"></datalist><div class="field-error" id="eCat" role="alert"></div></div>' +
+    '</div>' +
+    '<div class="dialog-actions"><button class="btn" type="button" data-cancel>Cancel</button><button class="btn btn-gold" type="submit">' + (editing ? 'Save Changes' : 'Add Target') + '</button></div>' +
+    '</form>');
+  $('[data-cancel]', dlg).addEventListener('click', () => Modal.close());
+  const form = $('#taskForm', dlg);
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = { title: $('#fTitle', form).value, description: $('#fDesc', form).value, category: $('#fCat', form).value, due: $('#fDue', form).value, priority: (form.querySelector('input[name="priority"]:checked') || {}).value };
+    const v = DG.validateTask(data);
+    const map = { title: ['#fTitle', '#eTitle'], description: ['#fDesc', '#eDesc'], due: ['#fDue', '#eDue'], category: ['#fCat', '#eCat'] };
+    let firstBad = null;
+    Object.keys(map).forEach((k) => {
+      const inp = $(map[k][0], form), err = $(map[k][1], form);
+      err.textContent = v.errors[k] || '';
+      inp.setAttribute('aria-invalid', v.errors[k] ? 'true' : 'false');
+      if (v.errors[k]) { inp.setAttribute('aria-describedby', map[k][1].slice(1)); if (!firstBad) firstBad = inp; } else inp.removeAttribute('aria-describedby');
+    });
+    if (!v.ok) { if (firstBad) firstBad.focus(); return; }
+    if (editing) {
+      const live = S.tasks.find((x) => x.id === task.id && x.status === 'active');
+      if (!live) { Modal.close(); toast('That target is no longer active.', 'error'); renderAll(); return; }
+      Object.assign(live, { title: v.clean.title, description: v.clean.description, category: v.clean.category, priority: v.clean.priority, due: v.clean.due });
+      save(); Modal.close(); renderAll(); toast('Target updated.');
+    } else {
+      const nt = { id: DG.uid(), title: v.clean.title, description: v.clean.description, category: v.clean.category, priority: v.clean.priority, createdAt: Date.now(), due: v.clean.due, status: 'active', completedAt: null, attacker: '', enemy: null, sample: false };
+      S.tasks.push(nt); save();
+      UI.newId = nt.id; Modal.close(); Sfx.unlock(); Sfx.spawn(); renderAll();
+      const el = $('[data-id="' + nt.id + '"]'); if (el && el.scrollIntoView) el.scrollIntoView({ block: 'nearest', behavior: isReduced() ? 'auto' : 'smooth' });
+      announce('New target identified: ' + nt.title);
+      toast('Target identified: ' + nt.title);
+      setTimeout(() => { UI.newId = null; }, 1200);
+    }
+  });
+}
+
+/* ---------- settings ---------- */
+function openSettings() {
+  const s = S.settings;
+  const sw = (id, label, hint, on) => '<div class="switch-row"><div class="t"><label for="' + id + '">' + label + '</label>' + (hint ? '<small>' + hint + '</small>' : '') + '</div><input class="toggle" type="checkbox" role="switch" id="' + id + '"' + (on ? ' checked' : '') + '></div>';
+  const sampleCount = S.tasks.filter((t) => t.sample && t.status === 'active').length;
+  const dlg = Modal.open(
+    '<h3 id="dlgTitle">Settings</h3><p class="sub">Changes save as you make them.</p>' +
+    '<h4 class="settings-h">SOUND</h4>' +
+    sw('sSound', 'Sound effects', 'Cannons, impacts and the victory sounds. Nothing plays until you interact with the page.', s.sound) +
+    sw('sAmb', 'Ocean ambience', 'A quiet background of water and wind.', s.ambience) +
+    '<div class="switch-row"><div class="t"><label for="sVol">Volume</label></div><input class="range" id="sVol" type="range" min="0" max="100" step="5" value="' + Math.round(s.volume * 100) + '"></div>' +
+    '<h4 class="settings-h">MOTION</h4>' +
+    sw('sReduce', 'Reduce motion', s.reducedMotion === 'system' ? 'Currently following your device setting.' : 'Calmer battles with no camera shake, flashes or tilting.', isReduced()) +
+    sw('sFast', 'Fast attack animation', 'Plays the battle in about half the time.', s.fast) +
+    '<div class="switch-row"><div class="t"><label for="sLow">Low-power mode</label><small>Fewer particles and a lighter ocean for older devices.</small></div><select class="select" id="sLow" style="width:auto"><option value="auto"' + (s.lowPower === 'auto' ? ' selected' : '') + '>Automatic</option><option value="on"' + (s.lowPower === 'on' ? ' selected' : '') + '>Always on</option><option value="off"' + (s.lowPower === 'off' ? ' selected' : '') + '>Off</option></select></div>' +
+    '<h4 class="settings-h">FLEET DEPLOYMENT</h4>' +
+    sw('sDepImp', 'Important targets get an enhanced battle', 'More cannon fire and a stronger finish.', s.deploy.important) +
+    sw('sDepCrit', 'Critical targets deploy DOMINGO1357', 'The personal flagship makes a cinematic entrance.', s.deploy.critical) +
+    sw('sDepMs', 'Milestones call out the Domingo Fleet', 'DOMINGO1357 and the Domingo Fleet appear together at 5, 10, 25, 50, 100 and 250 ships sunk.', s.deploy.milestone) +
+    '<h4 class="settings-h">CAMPAIGN</h4>' +
+    '<div class="switch-row"><div class="t"><label for="sGoal">Daily campaign goal</label><small>Ships to sink each day. Winning the day earns bonus Royal Favor.</small></div><input class="input num-input" id="sGoal" type="number" min="1" max="50" value="' + s.dailyGoal + '"></div>' +
+    (sampleCount ? '<div class="switch-row"><div class="t"><span>Sample targets</span><small>' + sampleCount + ' sample target' + (sampleCount > 1 ? 's' : '') + ' still on your list.</small></div><button class="btn btn-sm" type="button" id="sClearSamples">Remove samples</button></div>' : '') +
+    '<div class="dialog-actions"><button class="btn btn-danger btn-sm" type="button" id="sReset">Reset all game data</button><button class="btn btn-gold" type="button" data-cancel>Done</button></div>');
+  const bind = (id, fn, ev) => { const el = $('#' + id, dlg); if (el) el.addEventListener(ev || 'change', () => { fn(el); save(); applyEnvironment(); renderAll(); }); };
+  bind('sSound', (el) => { s.sound = el.checked; if (el.checked) Sfx.unlock(); });
+  bind('sAmb', (el) => { s.ambience = el.checked; Sfx.unlock(); });
+  bind('sVol', (el) => { s.volume = Number(el.value) / 100; }, 'input');
+  bind('sReduce', (el) => { s.reducedMotion = el.checked ? 'on' : 'off'; });
+  bind('sFast', (el) => { s.fast = el.checked; });
+  bind('sLow', (el) => { s.lowPower = el.value; });
+  bind('sDepImp', (el) => { s.deploy.important = el.checked; });
+  bind('sDepCrit', (el) => { s.deploy.critical = el.checked; });
+  bind('sDepMs', (el) => { s.deploy.milestone = el.checked; });
+  bind('sGoal', (el) => { const n = Math.round(Number(el.value)); s.dailyGoal = Math.min(50, Math.max(1, Number.isFinite(n) ? n : 5)); el.value = s.dailyGoal; });
+  const cs = $('#sClearSamples', dlg);
+  if (cs) cs.addEventListener('click', () => { removeSamples(); Modal.close(); });
+  $('[data-cancel]', dlg).addEventListener('click', () => Modal.close());
+  $('#sReset', dlg).addEventListener('click', async () => {
+    const ok = await confirmDialog({ title: 'Reset all game data?', body: 'This deletes every target, the whole Sanked Ships ledger, your lifetime count, Royal Favor and settings. It cannot be undone.', yes: 'Reset everything', danger: true });
+    if (ok) { S = DG.defaultState(); S.stats.seeded = true; save(); applyEnvironment(); renderAll(); toast('All game data was reset.'); }
+  });
+}
+
+function removeSamples() {
+  const n = S.tasks.filter((t) => t.sample && t.status === 'active').length;
+  S.tasks = S.tasks.filter((t) => !(t.sample && t.status === 'active'));
+  save(); renderAll();
+  if (n) toast(n + ' sample target' + (n > 1 ? 's' : '') + ' removed.');
+}
+
+
+/* =========================================================================
+   Layer 5b: views. Component map:
+   CommandDeck = renderTopbar + renderHero + panels | FlagshipDisplay / DomingoFleetDisplay = Hero canvas
+   ActiveTargets = renderTargets | CampaignProgress = renderDaily | SankedShipsArchive = renderLedgerList
+   QueensAlliance = renderAlliance | TaskCreationForm = openTaskForm | SettingsPanel = openSettings
+   ShipSinkingAnimation = Battle | VictoryOverlay = showVictory
+   ========================================================================= */
+function renderAll() {
+  renderTopbar(); renderHero(); renderTargets(); renderDaily(); renderRivals(); renderQueenMini();
+  if (UI.view === 'ledger') renderLedgerList();
+  if (UI.view === 'alliance') renderAlliance();
+}
+
+function renderTopbar() {
+  const now = Date.now(), rank = DG.Rules.rankFor(S.stats.favor);
+  const today = DG.Rules.todayCount(S, now), goal = S.settings.dailyGoal;
+  $('#navSunk').textContent = num(S.stats.totalSunk);
+  const chip = $('#allianceChip');
+  chip.innerHTML = icon('crest', 'crest') + '<span class="chip-text">' + esc(rank.title) + '</span><span class="num">' + num(S.stats.favor) + '</span>';
+  chip.setAttribute('aria-label', 'Queen’s Alliance. Rank ' + rank.title + ', ' + S.stats.favor + ' Royal Favor');
+  $('#dailyMini').innerHTML = '<span>Daily</span><div class="meter" role="img" aria-label="Daily campaign ' + today + ' of ' + goal + '"><i style="width:' + pct(today, goal) + '%"></i></div><span class="num">' + Math.min(today, 999) + '/' + goal + '</span>';
+}
+
+function renderHero() {
+  const now = Date.now(), active = DG.Rules.active(S), today = DG.Rules.todayCount(S, now);
+  $('#heroToday').textContent = today;
+  const crit = active.filter((t) => t.priority === 'critical').length;
+  let msg;
+  if (today >= S.settings.dailyGoal) msg = 'The daily campaign is won, Commander. The queen will hear of it.';
+  else if (!active.length) msg = 'The horizon is clear. Every sighted vessel has gone to the deep.';
+  else if (crit) msg = crit + ' Critical vessel' + (crit > 1 ? 's' : '') + ' in range, flying rival colours. ' + active.length + ' target' + (active.length > 1 ? 's' : '') + ' sighted in all.';
+  else msg = active.length + ' target' + (active.length > 1 ? 's' : '') + ' sighted. The Domingo Fleet holds station astern.';
+  $('#heroStatus').textContent = msg;
+}
+
+/* ---------- Active Targets ---------- */
+function visibleTargets() {
+  const q = UI.q.trim().toLowerCase();
+  let list = DG.Rules.active(S).filter((t) => (UI.priority === 'all' || t.priority === UI.priority) && (!q || (t.title + ' ' + t.description + ' ' + t.category).toLowerCase().includes(q)));
+  const w = (t) => DG.PRIORITIES[t.priority].weight;
+  const dueKey = (t) => (t.due == null ? Infinity : t.due);
+  const sorters = {
+    priority: (a, b) => w(b) - w(a) || dueKey(a) - dueKey(b) || a.createdAt - b.createdAt,
+    due: (a, b) => (dueKey(a) === dueKey(b) ? w(b) - w(a) : dueKey(a) < dueKey(b) ? -1 : 1),
+    newest: (a, b) => b.createdAt - a.createdAt,
+    oldest: (a, b) => a.createdAt - b.createdAt
+  };
+  return list.sort(sorters[UI.sort] || sorters.priority);
+}
+
+function targetCard(t, now) {
+  const en = DG.enemyFor(t), due = dueInfo(t, now), crit = t.priority === 'critical';
+  const confirming = UI.confirmDeleteId === t.id;
+  const label = esc(DG.PRIORITIES[t.priority].label);
+  return '<li class="target p-' + t.priority + (UI.newId === t.id ? ' is-new' : '') + '" data-id="' + t.id + '">' +
+    '<svg class="target-icon" aria-hidden="true"><use href="#i-ship-' + en.icon + '"/></svg>' +
+    '<div class="target-body">' +
+    '<div class="meta"><span class="badge badge-' + t.priority + '">' + (crit ? icon('warn') + ' ' : '') + label + (crit ? ' · Elite target' : '') + '</span>' +
+    (t.category ? '<span class="chip">' + esc(t.category) + '</span>' : '') + (t.sample ? '<span class="chip chip-sample">Sample</span>' : '') + '</div>' +
+    '<div class="target-title">' + esc(t.title) + '</div>' +
+    (t.description ? '<div class="target-desc">' + esc(t.description) + '</div>' : '') +
+    '<div class="target-ship">SIGHTED: ' + esc(en.name.toUpperCase()) + ', ' + esc(en.type.toUpperCase()) + '</div>' +
+    '<div class="meta"><span>Sighted ' + F.short.format(t.createdAt) + '</span>' + (due ? '<span class="' + due.cls + '">' + esc(due.text) + '</span>' : '') + '</div>' +
+    '</div>' +
+    '<div class="target-actions">' + (confirming
+      ? '<div class="confirm-inline" role="group" aria-label="Confirm delete"><span>Delete this target without sinking it? It will not count as sunk.</span><div class="row"><button class="btn btn-sm btn-solid-danger" type="button" data-act="delete-yes" data-id="' + t.id + '">Delete</button><button class="btn btn-sm" type="button" data-act="delete-no" data-id="' + t.id + '">Keep</button></div></div>'
+      : '<button class="btn btn-gold attack" type="button" data-act="attack" data-id="' + t.id + '" aria-label="Attack and sink: ' + esc(t.title) + '">' + icon('attack') + ' Attack</button>' +
+        '<div class="row"><button class="btn btn-sm" type="button" data-act="edit" data-id="' + t.id + '" aria-label="Edit: ' + esc(t.title) + '">' + icon('edit') + ' Edit</button><button class="btn btn-sm btn-danger" type="button" data-act="delete" data-id="' + t.id + '" aria-label="Delete: ' + esc(t.title) + '">' + icon('trash') + ' Delete</button></div>') +
+    '</div></li>';
+}
+
+function renderTargets() {
+  const now = Date.now(), all = DG.Rules.active(S), list = visibleTargets();
+  $('#atCount').textContent = all.length;
+  const samples = all.filter((t) => t.sample).length;
+  $('#sampleBanner').innerHTML = samples && !UI.samplesNoticeDismissed
+    ? '<div class="banner"><span>The sample targets show how the deck works. Sink them or remove them whenever you like.</span><button class="btn btn-sm" type="button" data-act="remove-samples">Remove samples</button></div>' : '';
+  const root = $('#targetsRoot');
+  if (!all.length) {
+    root.innerHTML = '<div class="empty"><svg aria-hidden="true"><use href="#i-wheel"/></svg><h4>Open water, Commander</h4><p>No enemy vessels are in range. Identify your next target to bring the fleet about.</p><button class="btn btn-gold" type="button" data-act="add">' + icon('plus') + ' Identify Prey</button></div>';
+    return;
+  }
+  if (!list.length) {
+    root.innerHTML = '<div class="empty"><h4>No targets match</h4><p>Nothing in range fits that search or filter.</p><button class="btn" type="button" data-act="clear-filters">Clear search and filters</button></div>';
+    return;
+  }
+  root.innerHTML = '<ul class="targets" aria-label="Active targets">' + list.map((t) => targetCard(t, now)).join('') + '</ul>';
+}
+
+/* ---------- Campaign panels ---------- */
+function renderDaily() {
+  const now = Date.now(), today = DG.Rules.todayCount(S, now), goal = S.settings.dailyGoal, stk = DG.Rules.streak(S, now);
+  const recent = DG.Rules.sunk(S).slice(0, 4), remaining = DG.Rules.active(S).length, p = pct(today, goal);
+  $('#dailyPanel').innerHTML =
+    '<div class="panel-title"><h3 id="dailyTitle">Daily Campaign</h3></div>' +
+    '<div class="progress-row"><span class="num">' + today + ' of ' + goal + ' ships sunk today</span><span class="num">' + p + '%</span></div>' +
+    '<div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="' + goal + '" aria-valuenow="' + Math.min(today, goal) + '" aria-label="Daily campaign progress"><i style="width:' + p + '%"></i></div>' +
+    '<div class="stat-grid"><div class="stat"><b>' + today + '</b><span>Sunk today</span></div><div class="stat"><b>' + remaining + '</b><span>Targets left</span></div><div class="stat"><b>' + stk.current + '</b><span>Day streak</span></div></div>' +
+    '<p class="field-hint">Best streak ' + stk.best + ' day' + (stk.best === 1 ? '' : 's') + '. ' + num(S.stats.totalSunk) + ' ship' + (S.stats.totalSunk === 1 ? '' : 's') + ' sunk in total. A missed day only resets the streak. Your records stay safe.</p>' +
+    '<div class="label" style="margin-top:14px">Recent victories</div>' +
+    (recent.length ? '<ul class="recent">' + recent.map((t) => '<li><span>' + esc(t.title) + '</span><time datetime="' + new Date(t.completedAt).toISOString() + '">' + F.short.format(t.completedAt) + '</time></li>').join('') + '</ul><p style="margin-top:10px"><a class="link-btn" href="#ledger">Open Sanked Ships</a></p>'
+      : '<p class="field-hint" style="margin-top:6px">No ships sunk yet. Your first victory will be logged here.</p>');
+}
+
+function challengeHtml(ch, p, detail) {
+  return '<div class="challenge' + (p.claimed ? ' done' : '') + '"><h4><span>' + esc(ch.name) + '</span><span class="num">' + p.count + '/' + p.target + '</span></h4>' +
+    '<div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="' + p.target + '" aria-valuenow="' + p.count + '" aria-label="' + esc(ch.name) + ' progress"><i style="width:' + pct(p.count, p.target) + '%"></i></div>' +
+    '<p>' + esc(ch.desc) + (detail ? ' Rival: ' + esc(ch.rival) + '.' : '') + ' ' + (p.claimed ? 'Won. +' + ch.favor + ' Royal Favor claimed.' : 'Reward: +' + ch.favor + ' Royal Favor.') + '</p></div>';
+}
+function renderRivals() {
+  const now = Date.now();
+  $('#rivalPanel').innerHTML = '<div class="panel-title"><h3 id="rivalTitle">Rival Captains</h3></div>' +
+    DG.CHALLENGES.map((ch) => challengeHtml(ch, DG.Rules.challengeProgress(S, ch, now), false)).join('') +
+    '<p class="field-hint" style="margin-top:8px">Optional challenges. They add Royal Favor and never remove progress.</p>';
+}
+function renderQueenMini() {
+  const rank = DG.Rules.rankFor(S.stats.favor), nx = DG.Rules.nextRank(S.stats.favor);
+  const p = nx ? pct(S.stats.favor - rank.favor, nx.favor - rank.favor) : 100;
+  $('#queenMini').innerHTML = '<div class="panel-title"><h3 id="queenMiniTitle">Queen’s Alliance</h3></div>' +
+    '<div style="display:flex;gap:12px;align-items:center"><svg class="insignia" style="width:52px;height:52px;flex:none" aria-hidden="true"><use href="#i-crest"/></svg><div><strong>' + esc(rank.title) + '</strong><div class="field-hint">' + num(S.stats.favor) + ' Royal Favor' + (nx ? ', ' + num(nx.favor - S.stats.favor) + ' to ' + esc(nx.title) : ', the highest rank') + '</div></div></div>' +
+    '<div class="meter" style="margin-top:10px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + p + '" aria-label="Progress to next rank"><i style="width:' + p + '%"></i></div>' +
+    '<p style="margin-top:10px"><a class="link-btn" href="#alliance">Open the Queen’s Alliance</a></p>';
+}
+
+/* ---------- Sanked Ships archive ---------- */
+function buildLedger() {
+  $('#ledgerRoot').innerHTML =
+    '<div class="view-head"><div><h2>SANKED SHIPS</h2><p>The captain’s ledger of every enemy vessel Domingo has sent to the deep.</p></div>' +
+    '<button class="btn btn-danger" id="clearLedger" type="button">' + icon('trash') + ' Clear ledger</button></div>' +
+    '<div id="ledgerNotice" role="status"></div>' +
+    '<div class="ledger"><div class="ledger-head"><div><h3>Captain’s Log</h3><p class="ledger-note" id="ledgerCount"></p></div></div>' +
+    '<div class="toolbar" role="search">' +
+    '<div class="field search"><label class="sr-only" for="lSearch">Search the ledger</label><input class="input" id="lSearch" type="search" placeholder="Search sunk ships" autocomplete="off"></div>' +
+    '<div class="field"><label class="sr-only" for="lPriority">Filter by priority</label><select class="select" id="lPriority"><option value="all">All priorities</option><option value="critical">Critical</option><option value="important">Important</option><option value="routine">Routine</option></select></div>' +
+    '<div class="field"><label class="sr-only" for="lDate">Filter by date</label><select class="select" id="lDate"><option value="all">All time</option><option value="today">Today</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="on">On a date</option></select></div>' +
+    '<div class="field" id="lOnWrap" hidden><label class="sr-only" for="lOn">Pick a date</label><input class="input" id="lOn" type="date"></div></div>' +
+    '<div id="ledgerList"></div></div>';
+  $('#lSearch').addEventListener('input', (e) => { UI.lq = e.target.value; renderLedgerList(); });
+  $('#lPriority').addEventListener('change', (e) => { UI.lpriority = e.target.value; renderLedgerList(); });
+  $('#lDate').addEventListener('change', (e) => { UI.ldate = e.target.value; $('#lOnWrap').hidden = UI.ldate !== 'on'; renderLedgerList(); });
+  $('#lOn').addEventListener('change', (e) => { UI.lon = e.target.value; renderLedgerList(); });
+  $('#clearLedger').addEventListener('click', clearLedger);
+  $('#ledgerList').addEventListener('click', onLedgerClick);
+}
+
+function filteredRecords() {
+  const now = Date.now(), q = UI.lq.trim().toLowerCase();
+  const startOfToday = new Date(now); startOfToday.setHours(0, 0, 0, 0);
+  return DG.Rules.sunk(S).filter((t) => {
+    if (UI.lpriority !== 'all' && t.priority !== UI.lpriority) return false;
+    if (q && !(t.title + ' ' + t.description + ' ' + t.category + ' ' + (t.enemy ? t.enemy.name + ' ' + t.enemy.type : '') + ' ' + t.attacker).toLowerCase().includes(q)) return false;
+    if (UI.ldate === 'today') return t.completedAt >= startOfToday.getTime();
+    if (UI.ldate === '7' || UI.ldate === '30') return t.completedAt >= startOfToday.getTime() - (Number(UI.ldate) - 1) * 86400000;
+    if (UI.ldate === 'on') return UI.lon ? DG.dayKey(t.completedAt) === UI.lon : true;
+    return true;
+  });
+}
+
+function renderLedgerList() {
+  if (!$('#ledgerList')) buildLedger();
+  const records = DG.Rules.sunk(S), shown = filteredRecords();
+  $('#ledgerCount').textContent = num(S.stats.totalSunk) + ' ship' + (S.stats.totalSunk === 1 ? '' : 's') + ' sunk in total. ' + num(records.length) + ' record' + (records.length === 1 ? '' : 's') + ' in this ledger' + (S.stats.totalSunk > records.length ? '. Deleted records still count toward your total.' : '.');
+  $('#ledgerNotice').innerHTML = UI.ledgerNotice ? '<div class="rec-notice">' + esc(UI.ledgerNotice) + '</div>' : '';
+  $('#clearLedger').disabled = !records.length;
+  const root = $('#ledgerList');
+  if (!records.length) { root.innerHTML = '<div class="empty" style="border-color:rgba(201,162,74,0.3)"><svg aria-hidden="true"><use href="#i-book"/></svg><h4>The ledger is empty</h4><p>Attack a target from the Command Deck and the sunk ship is logged here.</p><a class="btn btn-gold" href="#deck">Return to the Command Deck</a></div>'; return; }
+  if (!shown.length) { root.innerHTML = '<div class="empty"><h4>No records match</h4><p>Try a different search or date.</p><button class="btn" type="button" data-act="clear-ledger-filters">Clear search and filters</button></div>'; return; }
+  const groups = [];
+  shown.forEach((t) => { const k = DG.dayKey(t.completedAt); let g = groups[groups.length - 1]; if (!g || g.key !== k) { g = { key: k, ts: t.completedAt, items: [] }; groups.push(g); } g.items.push(t); });
+  root.innerHTML = groups.map((g) => '<section class="day"><h4><span>' + esc(F.day.format(g.ts)) + '</span><span class="num">' + g.items.length + ' sunk</span></h4>' + g.items.map((t) => {
+    const confirming = UI.confirmRecordId === t.id;
+    return '<article class="entry" data-rec="' + t.id + '"><div class="entry-main"><div class="entry-title">' + esc(t.title) + '</div>' + (t.description ? '<div class="entry-desc">' + esc(t.description) + '</div>' : '') +
+      '<div class="meta"><span class="badge badge-' + t.priority + '">' + esc(DG.PRIORITIES[t.priority].label) + '</span>' + (t.category ? '<span class="chip">' + esc(t.category) + '</span>' : '') +
+      (t.enemy && t.enemy.name ? '<span>Sunk: <b>' + esc(t.enemy.name) + '</b>, ' + esc(t.enemy.type) + '</span>' : '') + (t.attacker ? '<span>By ' + esc(t.attacker) + '</span>' : '') + '</div></div>' +
+      '<div class="entry-side"><time datetime="' + new Date(t.completedAt).toISOString() + '">' + esc(F.full.format(t.completedAt)) + '</time>' +
+      (confirming ? '<div class="confirm-inline" role="group" aria-label="Confirm delete record"><span>Delete this record permanently? The ship stays sunk and still counts toward your total.</span><div class="row"><button class="btn btn-sm btn-solid-danger" type="button" data-act="rec-yes" data-id="' + t.id + '">Delete record</button><button class="btn btn-sm" type="button" data-act="rec-no" data-id="' + t.id + '">Keep</button></div></div>'
+        : '<button class="btn btn-sm btn-danger" type="button" data-act="rec-delete" data-id="' + t.id + '" aria-label="Delete record: ' + esc(t.title) + '">' + icon('trash') + ' Delete</button>') +
+      '</div></article>';
+  }).join('') + '</section>').join('');
+}
+
+function onLedgerClick(e) {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const id = b.getAttribute('data-id');
+  const act = b.getAttribute('data-act');
+  if (act === 'clear-ledger-filters') { UI.lq = ''; UI.lpriority = 'all'; UI.ldate = 'all'; UI.lon = ''; $('#lSearch').value = ''; $('#lPriority').value = 'all'; $('#lDate').value = 'all'; $('#lOn').value = ''; $('#lOnWrap').hidden = true; renderLedgerList(); }
+  else if (act === 'rec-delete') { UI.confirmRecordId = id; renderLedgerList(); const y = $('[data-act="rec-yes"]'); if (y) y.focus(); }
+  else if (act === 'rec-no') { UI.confirmRecordId = null; renderLedgerList(); const d = $('[data-act="rec-delete"][data-id="' + id + '"]'); if (d) d.focus(); }
+  else if (act === 'rec-yes') {
+    const rec = S.tasks.find((t) => t.id === id && t.status === 'sunk');
+    UI.confirmRecordId = null;
+    if (rec) {
+      S.tasks = S.tasks.filter((t) => t.id !== id); save();
+      UI.ledgerNotice = 'Record deleted permanently: “' + rec.title + '”. It was not reactivated, and your total of ' + num(S.stats.totalSunk) + ' ships sunk is unchanged.';
+      announce(UI.ledgerNotice);
+    }
+    renderAll();
+  }
+}
+
+async function clearLedger() {
+  const n = DG.Rules.sunk(S).length; if (!n) return;
+  const ok = await confirmDialog({ title: 'Clear the Sanked Ships ledger?', body: 'This permanently deletes all ' + n + ' record' + (n > 1 ? 's' : '') + '. Your total of ' + num(S.stats.totalSunk) + ' ships sunk, your Royal Favor and your streak are kept. Active targets are not touched. This cannot be undone.', yes: 'Clear ledger', danger: true });
+  if (!ok) return;
+  S.tasks = S.tasks.filter((t) => t.status !== 'sunk'); save();
+  UI.ledgerNotice = 'The ledger was cleared. ' + n + ' record' + (n > 1 ? 's were' : ' was') + ' deleted permanently. Your total of ' + num(S.stats.totalSunk) + ' ships sunk is unchanged.';
+  announce(UI.ledgerNotice); renderAll();
+}
+
+/* ---------- Queen's Alliance ---------- */
+function renderAlliance() {
+  const now = Date.now(), fav = S.stats.favor, rank = DG.Rules.rankFor(fav), nx = DG.Rules.nextRank(fav), stk = DG.Rules.streak(S, now);
+  const p = nx ? pct(fav - rank.favor, nx.favor - rank.favor) : 100;
+  const hist = DG.Rules.history(S, 14, now), max = Math.max(1, ...hist.map((h) => h.count));
+  const dep = S.settings.deploy;
+  const nextMs = DG.MILESTONES.find((m) => S.stats.totalSunk < m.n);
+  $('#allianceRoot').innerHTML =
+    '<div class="view-head"><div><h2>QUEEN’S ALLIANCE</h2><p>' + esc(DG.QUEEN.name) + ' of ' + esc(DG.QUEEN.realm) + ' trusts Domingo with her waters. Earn Royal Favor to rise in her service.</p></div></div>' +
+    '<div class="alliance-grid"><div class="stack">' +
+    '<section class="panel"><div class="queen-card"><svg class="insignia" aria-hidden="true"><use href="#i-crest"/></svg><div><div class="label">Alliance status: Allied</div><h3 style="font-size:28px;color:var(--gold-hi)">' + esc(rank.title) + '</h3><p class="field-hint" style="font-size:14px">' + esc(rank.blurb) + '</p></div></div>' +
+    '<div class="progress-row" style="margin-top:14px"><span class="num">' + num(fav) + ' Royal Favor</span><span>' + (nx ? num(nx.favor - fav) + ' to ' + esc(nx.title) : 'Highest rank reached') + '</span></div>' +
+    '<div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + p + '" aria-label="Progress to next rank"><i style="width:' + p + '%"></i></div>' +
+    '<div class="note-real" style="margin-top:14px"><b>Real record:</b> ' + num(S.stats.totalSunk) + ' ships sunk, ' + stk.current + '-day streak. <b>Game rewards:</b> Royal Favor and decorations are cosmetic. Missing a day never removes a record or any Royal Favor.</div></section>' +
+    '<section class="panel"><div class="panel-title"><h3>Ranks of the Realm</h3></div><ol class="rank-list">' + DG.RANKS.map((r) => {
+      const reached = fav >= r.favor, cur = r.id === rank.id;
+      return '<li class="rank' + (reached ? ' reached' : '') + (cur ? ' current' : '') + '"><span class="dot" aria-hidden="true">' + (reached ? '✓' : '') + '</span><div><b>' + esc(r.title) + '</b><small>' + esc(r.blurb) + '</small></div><span class="req">' + num(r.favor) + ' favor' + (cur ? ' · current' : '') + '</span></li>';
+    }).join('') + '</ol></section></div>' +
+    '<div class="stack">' +
+    '<section class="panel"><div class="panel-title"><h3>Ship Decorations</h3></div><ul class="reward-list">' + DG.COSMETICS.map((c) => {
+      const ok = rank.id >= c.rank; return '<li class="reward' + (ok ? '' : ' locked') + '"><span><b>' + esc(c.name) + '</b><br><small>' + esc(c.desc) + '</small></span><span class="badge ' + (ok ? 'badge-important' : '') + '">' + (ok ? 'Unlocked' : 'Rank ' + c.rank) + '</span></li>';
+    }).join('') + '</ul></section>' +
+    '<section class="panel"><div class="panel-title"><h3>Campaign History</h3></div><p class="field-hint">Ships sunk per day over the last 14 days.</p>' +
+    '<div class="hist" role="img" aria-label="Ships sunk per day, last 14 days: ' + hist.map((h) => h.count).join(', ') + '">' + hist.map((h) => '<div class="col"><span>' + (h.count || '') + '</span><div class="bar' + (h.count ? '' : ' zero') + '" style="height:' + (h.count ? Math.max(6, Math.round(h.count / max * 88)) : 2) + 'px"></div></div>').join('') + '</div>' +
+    '<div class="hist-label"><span>' + esc(F.dm.format(hist[0].ts)) + '</span><span>Today</span></div></section>' +
+    '<section class="panel"><div class="panel-title"><h3>Rival Captains</h3></div>' + DG.CHALLENGES.map((ch) => challengeHtml(ch, DG.Rules.challengeProgress(S, ch, now), true)).join('') + '</section>' +
+    '<section class="panel"><div class="panel-title"><h3>Fleet Deployment</h3><button class="btn btn-sm" type="button" data-act="open-settings">Change</button></div><ul class="reward-list">' +
+    '<li class="reward"><span><b>Routine</b><br><small>A scout cutter or patrol warship</small></span><span class="badge badge-routine">Standard</span></li>' +
+    '<li class="reward"><span><b>Important</b><br><small>Patrol warship, extra cannon fire</small></span><span class="badge ' + (dep.important ? 'badge-important' : '') + '">' + (dep.important ? 'Enhanced' : 'Standard') + '</span></li>' +
+    '<li class="reward"><span><b>Critical</b><br><small>DOMINGO1357 takes the field</small></span><span class="badge ' + (dep.critical ? 'badge-critical' : '') + '">' + (dep.critical ? 'Flagship' : 'Enhanced') + '</span></li>' +
+    '<li class="reward"><span><b>Milestones</b><br><small>' + (nextMs ? 'Next at ' + nextMs.n + ' ships sunk. ' : '') + 'DOMINGO1357 and the Domingo Fleet together</small></span><span class="badge ' + (dep.milestone ? 'badge-critical' : '') + '">' + (dep.milestone ? 'Full fleet' : 'Off') + '</span></li></ul></section>' +
+    '</div></div>';
+}
+
+/* ---------- router ---------- */
+function setView(name) {
+  if (!['deck', 'ledger', 'alliance'].includes(name)) name = 'deck';
+  UI.view = name;
+  ['deck', 'ledger', 'alliance'].forEach((v) => { $('#view-' + v).hidden = v !== name; });
+  $$('[data-view]').forEach((a) => { if (a.getAttribute('data-view') === name) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  if (name === 'ledger') { if (!$('#ledgerList')) buildLedger(); renderLedgerList(); }
+  if (name === 'alliance') renderAlliance();
+  window.scrollTo(0, 0);
+}
+
+
+/* =========================================================================
+   Layer 5c: the attack flow, the victory overlay and start-up wiring.
+   A task becomes sunk in exactly one place: completeTask(), after the battle ends
+   (or fails, is skipped, or times out). UI.engaging blocks any second attack meanwhile.
+   ========================================================================= */
+function completeTask(id, plan) {
+  let fresh = S;
+  if (DG.Store.ok) {
+    try { const f = DG.Store.load(); if (f.tasks.some((t) => t.id === id)) fresh = f; } catch (e) { fresh = S; }
+  }
+  const res = DG.Rules.commitSink(fresh, id, plan, Date.now());
+  S = fresh;
+  if (res.ok) save();
+  return res;
+}
+
+function showVictory(host, res, plan) {
+  return new Promise((resolve) => {
+    const t = res.task, en = t.enemy || plan.enemy;
+    const el = document.createElement('div');
+    el.className = 'victory'; el.setAttribute('role', 'alertdialog'); el.setAttribute('aria-labelledby', 'vTitle');
+    el.innerHTML = '<div class="victory-card"><div class="label" style="color:var(--foam)">Victory at sea</div><h2 id="vTitle"></h2><p class="victory-task"></p><div class="victory-meta"></div><button class="btn btn-gold" id="vContinue" type="button">Continue</button></div>';
+    $('#vTitle', el).textContent = DG.VICTORY_TEXT;
+    $('.victory-task', el).textContent = t.title;
+    const attacker = t.attacker + (plan.fleet === 'full' ? ' and the Domingo Fleet' : '');
+    $('.victory-meta', el).innerHTML =
+      '<span>Ship sunk: <b>' + esc(en.name) + '</b>, ' + esc(en.type) + '</span><span>Sunk by <b>' + esc(attacker) + '</b></span><span>Victory at <b>' + esc(F.time.format(t.completedAt)) + '</b></span>' +
+      '<span>Today <b>' + res.today + ' of ' + S.settings.dailyGoal + '</b></span><span>Royal Favor <b>+' + res.favorGained + '</b></span>' +
+      (res.milestone ? '<span>Milestone <b>' + res.milestone.n + ' ships sunk</b></span>' : '');
+    host.appendChild(el);
+    Sfx.victory();
+    if (res.milestone || res.rankUp || res.challenges.length) setTimeout(() => Sfx.royal(), 700);
+    announce(DG.VICTORY_TEXT + ' ' + t.title);
+    const btn = $('#vContinue', el);
+    btn.focus();
+    let timer = null, closed = false;
+    const close = () => { if (closed) return; closed = true; clearTimeout(timer); document.removeEventListener('keydown', onKey, true); resolve(); };
+    const arm = () => { clearTimeout(timer); timer = setTimeout(close, isReduced() ? 6000 : 4500); };
+    const onKey = (e) => { if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); } else if (e.key === 'Tab') e.preventDefault(); };
+    document.addEventListener('keydown', onKey, true);
+    btn.addEventListener('click', close);
+    el.addEventListener('pointerenter', () => clearTimeout(timer));
+    el.addEventListener('pointerleave', arm);
+    arm();
+  });
+}
+
+async function attack(id) {
+  if (UI.engaging) return;
+  const task = S.tasks.find((t) => t.id === id && t.status === 'active');
+  if (!task) { renderAll(); return; }
+  UI.engaging = true; UI.confirmDeleteId = null;
+  Sfx.unlock();
+  const plan = DG.Rules.planAttack(task, S);
+  const card = $('[data-id="' + id + '"]'); if (card) card.classList.add('is-locked');
+  $$('[data-act="attack"]').forEach((b) => b.setAttribute('aria-disabled', 'true'));
+  const root = $('#battleRoot');
+  root.innerHTML = '<div class="battle" role="dialog" aria-modal="true" aria-label="Naval engagement"><div class="battle-caption" aria-live="off"><div class="battle-stage" id="bStage"></div><div class="battle-task" id="bTask"></div></div><button class="btn battle-skip" type="button" id="bSkip">Skip animation</button></div>';
+  const host = $('.battle', root);
+  $('#bTask').textContent = task.title;
+  document.body.style.overflow = 'hidden';
+  const prevFocus = document.activeElement;
+  $('#bSkip').focus();
+  let handle, phase = 'battle';
+  const onKey = (e) => { if (phase !== 'battle') return; if (e.key === 'Escape') { e.preventDefault(); handle.skip(); } else if (e.key === 'Tab') e.preventDefault(); };
+  document.addEventListener('keydown', onKey);
+  try {
+    handle = Battle.start(host, plan, task, { reduced: isReduced(), fast: S.settings.fast, low: isLow(), cosm: DG.Rules.cosmetics(S.stats.favor), onStage: (txt) => { const s = $('#bStage'); if (s) s.textContent = txt; } });
+  } catch (err) {
+    console.error('Battle failed to start', err);
+    handle = { promise: Promise.resolve({ ok: false, error: String(err) }), skip() {}, destroy() {} };
+  }
+  $('#bSkip').addEventListener('click', () => handle.skip());
+  let outcome;
+  try { outcome = await handle.promise; } catch (err) { outcome = { ok: false, error: String(err) }; }
+  phase = 'victory';
+  $('#bSkip').hidden = true;
+  const res = completeTask(id, plan);
+  let rankBeforeToast = null;
+  if (res.ok) {
+    renderAll();
+    await showVictory(host, res, plan);
+    rankBeforeToast = res;
+  }
+  document.removeEventListener('keydown', onKey);
+  try { handle.destroy(); } catch (err) { /* already torn down */ }
+  root.innerHTML = '';
+  document.body.style.overflow = '';
+  UI.engaging = false;
+  applyEnvironment(); renderAll();
+  if (prevFocus && prevFocus.isConnected) { try { $('#main').focus({ preventScroll: true }); } catch (e) { /* ignore */ } }
+  if (!res.ok) toast('That ship was already sunk. Your lists were refreshed.');
+  if (outcome && outcome.ok === false && (outcome.error || outcome.timeout)) toast('The battle display had a problem, but the ship was sunk and recorded.', 'error');
+  if (rankBeforeToast) {
+    const r = rankBeforeToast;
+    const detail = r.gains.map((g) => g.label + ' +' + g.favor).join(', ');
+    toast('Royal Favor +' + r.favorGained + ' (' + detail + ')', 'royal');
+    if (r.rankUp) {
+      const un = DG.COSMETICS.filter((c) => c.rank === r.rankUp.id).map((c) => c.name);
+      setTimeout(() => toast('New rank: ' + r.rankUp.title + (un.length ? '. Unlocked: ' + un.join(', ') + '.' : '.'), 'royal'), 600);
+    }
+  }
+}
+
+/* ---------- start-up ---------- */
+function init() {
+  Hero.init($('#heroCanvas'));
+  if (DG.seedSamples(S, Date.now())) { /* first run: removable samples */ }
+  save();
+  applyEnvironment();
+
+  ['#preyBtn', '#addBtn2', '#fabBtn'].forEach((s) => $(s).addEventListener('click', () => openTaskForm()));
+  $('#settingsBtn').addEventListener('click', openSettings);
+  $('#soundBtn').addEventListener('click', () => {
+    S.settings.sound = !S.settings.sound; if (S.settings.sound) { Sfx.unlock(); } save(); applyEnvironment();
+    if (S.settings.sound) setTimeout(() => Sfx.ping(), 80);
+    toast(S.settings.sound ? 'Sound on.' : 'Sound muted.');
+  });
+  $('#tSearch').addEventListener('input', (e) => { UI.q = e.target.value; renderTargets(); });
+  $('#tPriority').addEventListener('change', (e) => { UI.priority = e.target.value; renderTargets(); });
+  $('#tSort').addEventListener('change', (e) => { UI.sort = e.target.value; renderTargets(); });
+
+  const onAct = (e) => {
+    const b = e.target.closest('[data-act]'); if (!b) return;
+    const act = b.getAttribute('data-act'), id = b.getAttribute('data-id');
+    if (act === 'attack') { if (b.getAttribute('aria-disabled') === 'true') return; attack(id); }
+    else if (act === 'edit') { const t = S.tasks.find((x) => x.id === id && x.status === 'active'); if (t) openTaskForm(t); }
+    else if (act === 'delete') { UI.confirmDeleteId = id; renderTargets(); const y = $('[data-act="delete-yes"]'); if (y) y.focus(); }
+    else if (act === 'delete-no') { UI.confirmDeleteId = null; renderTargets(); const d = $('[data-act="delete"][data-id="' + id + '"]'); if (d) d.focus(); }
+    else if (act === 'delete-yes') {
+      const t = S.tasks.find((x) => x.id === id && x.status === 'active'); UI.confirmDeleteId = null;
+      if (t) { S.tasks = S.tasks.filter((x) => x.id !== id); save(); toast('Target deleted: ' + t.title); announce('Target deleted: ' + t.title); }
+      renderAll();
+    }
+    else if (act === 'add') openTaskForm();
+    else if (act === 'clear-filters') { UI.q = ''; UI.priority = 'all'; $('#tSearch').value = ''; $('#tPriority').value = 'all'; renderTargets(); }
+    else if (act === 'remove-samples') removeSamples();
+    else if (act === 'open-settings') openSettings();
+  };
+  $('#view-deck').addEventListener('click', onAct);
+  $('#allianceRoot').addEventListener('click', onAct);
+
+  const route = () => { const h = (location.hash || '').replace('#', ''); setView(/^[a-z]+$/.test(h) ? h : 'deck'); };
+  window.addEventListener('hashchange', route);
+  route();
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'n' || e.ctrlKey || e.metaKey || e.altKey || UI.engaging || $('#modalRoot').firstChild) return;
+    const tag = (e.target && e.target.tagName) || '';
+    if (/INPUT|TEXTAREA|SELECT/.test(tag) || (e.target && e.target.isContentEditable)) return;
+    e.preventDefault(); openTaskForm();
+  });
+  ['pointerdown', 'keydown'].forEach((ev) => document.addEventListener(ev, () => { if (!Sfx.ctx || Sfx.ctx.state === 'suspended') Sfx.unlock(); }, { passive: true }));
+  window.addEventListener('storage', (e) => {
+    if (e.key !== DG.STORAGE_KEY || !e.newValue || UI.engaging) return;
+    S = DG.Store.load(); applyEnvironment(); renderAll();
+  });
+  if (mq.addEventListener) mq.addEventListener('change', () => { applyEnvironment(); });
+  renderStorageBanner();
+  renderAll();
+}
+init();
+
+</script>
+
+</body></html>
